@@ -77,6 +77,9 @@ h2{font-size:clamp(34px,6vw,64px);font-weight:300;letter-spacing:-1.5px;margin:6
 .hname small{display:block;font-family:Cinzel,serif;letter-spacing:10px;font-size:clamp(14px,3vw,22px);color:var(--a);margin-bottom:6px}
 .hname .w{display:block;font-weight:300;letter-spacing:-.04em;text-transform:uppercase;white-space:nowrap;
 background:linear-gradient(180deg,var(--fg) 30%,color-mix(in srgb,var(--fg) 25%,transparent));-webkit-background-clip:text;color:transparent;filter:drop-shadow(0 6px 30px color-mix(in srgb,var(--a) 25%,transparent))}
+
+#mBtn{position:fixed;right:14px;bottom:86px;z-index:60;width:42px;height:42px;border-radius:50%;border:1px solid color-mix(in srgb,var(--fg) 20%,transparent);background:color-mix(in srgb,var(--bg) 70%,transparent);backdrop-filter:blur(10px);color:var(--fg);font-size:18px;display:none;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 18px rgba(0,0,0,.2)}
+#mBtn.on{animation:mpulse 1.6s ease-in-out infinite}@keyframes mpulse{50%{box-shadow:0 0 0 6px color-mix(in srgb,var(--a) 25%,transparent)}}
 </style></head><body>
 <canvas id="bgfx"></canvas><div class="loader" id="ld">&gt; loading AQDAS…</div>
 <nav class="nav"><a class="brand" href="#home"><span class="dot">A</span><span id="nBrand">AQDAS HACKER</span></a>
@@ -99,10 +102,18 @@ const $=i=>document.getElementById(i);const esc=s=>String(s??'').replace(/[&<>"]
 const safe=u=>/^(https?:|mailto:|tel:)/i.test(u||'')?u:'#';
 let d={};try{d=await loadSite()}catch(e){console.error(e)}
 document.documentElement.style.setProperty('--a',d.accent||'#00ff88');if(d.theme==='light')document.body.classList.add('light');
+const nv=(v,df)=>(v===''||v==null||isNaN(+v))?df:+v;
 const wa=n=>{n=String(n||'').trim();if(/^https?:\/\//i.test(n))return n;if(/[a-z]/i.test(n))return 'https://wa.me/'+n.replace(/^@/,'').replace(/[^\w.]/g,'');return 'https://wa.me/'+n.replace(/\D/g,'')};
 const waT=(n,t)=>{const u=wa(n);return u+(u.includes('?')?'&':'?')+'text='+encodeURIComponent(t)};
 const waShow=n=>{n=String(n||'').trim();if(/^https?:/i.test(n))return 'WhatsApp';if(/[a-z]/i.test(n))return '@'+n.replace(/^@/,'');return '+'+n.replace(/\D/g,'')};
-{const hb=d.heroBg||d.photo;if(hb&&d.heroBgOn!==false){$('hbg').style.backgroundImage='url("'+String(hb).replace(/["\\)]/g,'')+'")';$('hbg').style.setProperty('--hbo',(d.heroBgOpacity??35)/100);$('hbg').style.setProperty('--hbb',(d.heroBgBlur??0)+'px')}}
+{const hb=d.heroBg||d.photo;if(hb&&d.heroBgOn!==false){$('hbg').style.backgroundImage='url("'+String(hb).replace(/["\\)]/g,'')+'")';$('hbg').style.setProperty('--hbo',nv(d.heroBgOpacity,35)/100);$('hbg').style.setProperty('--hbb',nv(d.heroBgBlur,0)+'px')}}
+{const s=d.song&&String(d.song).trim();if(s&&d.songOn!==false&&d.songOn!=='false'&&/^https?:\/\//i.test(s)){const au=$('bgm'),mb=$('mBtn');au.src=s;au.volume=Math.min(Math.max(nv(d.songVolume,60)/100,0),1);mb.style.display='flex';let muted=localStorage.getItem('aqm')==='1';
+const ui=()=>{const p=!au.paused&&!muted;mb.textContent=p?'🔊':'🔇';mb.classList.toggle('on',p)};
+const go=()=>{if(muted)return;au.muted=false;au.play().then(ui).catch(ui)};
+au.addEventListener('play',ui);au.addEventListener('pause',ui);go();
+const first=()=>{go();['pointerdown','touchstart','keydown','scroll'].forEach(e=>removeEventListener(e,first,true))};['pointerdown','touchstart','keydown','scroll'].forEach(e=>addEventListener(e,first,{capture:true,passive:true}));
+mb.onclick=e=>{e.stopPropagation();muted=!muted;localStorage.setItem('aqm',muted?'1':'0');if(muted){au.pause()}else{au.play().catch(()=>{})}ui()};
+document.addEventListener('visibilitychange',()=>{if(document.hidden)au.pause();else go()})}}
 document.title=(d.brand||'AQDAS HACKER')+' — '+(d.name||'');
 $('nBrand').textContent=d.brand||'AQDAS HACKER';$('nWa').href=wa(d.whatsapp);
 $('hKick').textContent=(d.brand||'')+' / PORTFOLIO & STORE';
@@ -138,4 +149,5 @@ setTimeout(()=>$('ld').classList.add('hide'),300);
 const c=$('bgfx'),x=c.getContext('2d');let W,H,P=[];function rs(){W=c.width=innerWidth;H=c.height=innerHeight;P=Array.from({length:Math.min(70,W/14)},()=>({x:Math.random()*W,y:Math.random()*H,v:.2+Math.random()*.6,s:Math.random()*2+0.5}))}rs();addEventListener('resize',rs);
 const ac=getComputedStyle(document.documentElement).getPropertyValue('--a').trim();
 (function f(){x.clearRect(0,0,W,H);x.fillStyle=ac;P.forEach(p=>{p.y+=p.v;if(p.y>H){p.y=-5;p.x=Math.random()*W}x.globalAlpha=.35;x.fillRect(p.x,p.y,p.s,p.s*6)});requestAnimationFrame(f)})();
-</script></body></html>
+</script><audio id="bgm" loop preload="auto" playsinline></audio><button id="mBtn" aria-label="Music">🔇</button>
+</body></html>
