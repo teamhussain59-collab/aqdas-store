@@ -80,7 +80,17 @@ background:linear-gradient(180deg,var(--fg) 30%,color-mix(in srgb,var(--fg) 25%,
 
 #mBtn{position:fixed;right:14px;bottom:86px;z-index:60;width:42px;height:42px;border-radius:50%;border:1px solid color-mix(in srgb,var(--fg) 20%,transparent);background:color-mix(in srgb,var(--bg) 70%,transparent);backdrop-filter:blur(10px);color:var(--fg);font-size:18px;display:none;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 18px rgba(0,0,0,.2)}
 #mBtn.on{animation:mpulse 1.6s ease-in-out infinite}@keyframes mpulse{50%{box-shadow:0 0 0 6px color-mix(in srgb,var(--a) 25%,transparent)}}
-.acode{display:block;font-size:11px;background:#0008;color:#7CFC9A;padding:6px 8px;border-radius:8px;overflow-x:auto;white-space:nowrap;margin:8px 0}.arow{display:flex;gap:8px}.arow .cbtn{flex:1;text-align:center;cursor:pointer;border:0}.abadge{font-size:10px;background:var(--a);color:#fff;padding:2px 6px;border-radius:6px;vertical-align:middle}</style></head><body>
+.acode{display:block;font-size:11px;background:#0008;color:#7CFC9A;padding:6px 8px;border-radius:8px;overflow-x:auto;white-space:nowrap;margin:8px 0}.arow{display:flex;gap:8px}.arow .cbtn{flex:1;text-align:center;cursor:pointer;border:0}.abadge{font-size:10px;background:var(--a);color:#fff;padding:2px 6px;border-radius:6px;vertical-align:middle}
+.msc{position:fixed;z-index:55;pointer-events:none;will-change:transform}
+.msc img{width:100%;height:auto;display:block;filter:drop-shadow(0 8px 18px rgba(0,0,0,.35))}
+.msc.run{top:var(--mt,55%);left:0}
+.msc.run img{animation:mbob .35s ease-in-out infinite alternate}
+@keyframes mbob{from{transform:translateY(0) rotate(-4deg)}to{transform:translateY(-14px) rotate(4deg)}}
+.msc.peek{bottom:0;right:8%;transform:translateY(110%);transition:transform .7s cubic-bezier(.3,1.5,.5,1)}
+.msc.peek.up{transform:translateY(18%)}
+.msc.peek.up img{animation:mwob 1.2s ease-in-out infinite alternate}
+@keyframes mwob{from{transform:rotate(-6deg)}to{transform:rotate(6deg)}}
+</style></head><body>
 <canvas id="bgfx"></canvas><div class="loader" id="ld">&gt; loading AQDAS…</div>
 <nav class="nav"><a class="brand" href="#home"><span class="dot">A</span><span id="nBrand">AQDAS HACKER</span></a>
 <div class="links"><a href="#about">About</a><a href="#store">Store</a><a href="#links">Links</a><a href="#contact">Contact</a></div>
@@ -114,6 +124,16 @@ au.addEventListener('play',ui);au.addEventListener('pause',ui);go();
 const first=()=>{go();['pointerdown','touchstart','keydown','scroll'].forEach(e=>removeEventListener(e,first,true))};['pointerdown','touchstart','keydown','scroll'].forEach(e=>addEventListener(e,first,{capture:true,passive:true}));
 mb.onclick=e=>{e.stopPropagation();muted=!muted;localStorage.setItem('aqm',muted?'1':'0');if(muted){au.pause()}else{au.play().catch(()=>{})}ui()};
 document.addEventListener('visibilitychange',()=>{if(document.hidden)au.pause();else go()})}}
+
+{const M=d.mascot||{};const img=(M.img||'').trim();if(img&&/^https?:\/\//i.test(img)&&M.on!=='off'){
+ const size=nv(M.size,120),runN=nv(M.runTimes,1),peekN=nv(M.peekTimes,1),gap=Math.max(nv(M.gap,8),2)*1000,first=Math.max(nv(M.delay,3),0)*1000,speed=Math.max(nv(M.speed,4),1)*1000;
+ const mk=c=>{const e=document.createElement('div');e.className='msc '+c;e.style.width=size+'px';e.innerHTML='<img alt="" src="'+img.replace(/"/g,'')+'">';document.body.appendChild(e);return e};
+ const run=()=>new Promise(r=>{const e=mk('run');const ltr=Math.random()<.5;e.style.setProperty('--mt',(25+Math.random()*45)+'%');const W=innerWidth+size;
+  const a=e.animate([{transform:`translateX(${ltr?-size:innerWidth}px) scaleX(${ltr?1:-1})`},{transform:`translateX(${ltr?innerWidth:-size}px) scaleX(${ltr?1:-1})`}],{duration:speed,easing:'linear'});a.onfinish=()=>{e.remove();r()}});
+ const peek=()=>new Promise(r=>{const e=mk('peek');e.style.right=(5+Math.random()*60)+'%';requestAnimationFrame(()=>requestAnimationFrame(()=>e.classList.add('up')));setTimeout(()=>{e.classList.remove('up');setTimeout(()=>{e.remove();r()},800)},2600)});
+ const seq=[];const mx=Math.max(runN,peekN);for(let i=0;i<mx;i++){if(i<runN)seq.push(run);if(i<peekN)seq.push(peek)}
+ (async()=>{await new Promise(r=>setTimeout(r,first));for(let i=0;i<seq.length;i++){if(document.hidden){await new Promise(r=>document.addEventListener('visibilitychange',function f(){if(!document.hidden){document.removeEventListener('visibilitychange',f);r()}}))}await seq[i]();if(i<seq.length-1)await new Promise(r=>setTimeout(r,gap))}})();
+}}
 document.title=(d.brand||'AQDAS HACKER')+' — '+(d.name||'');
 $('nBrand').textContent=d.brand||'AQDAS HACKER';$('nWa').href=wa(d.whatsapp);
 $('hKick').textContent=(d.brand||'')+' / PORTFOLIO & STORE';
