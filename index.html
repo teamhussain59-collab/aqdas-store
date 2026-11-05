@@ -59,12 +59,17 @@ h2{font-size:clamp(34px,6vw,64px);font-weight:300;letter-spacing:-1.5px;margin:6
 .view.open{transform:none}.vhead{position:fixed;top:0;left:0;right:0;display:flex;align-items:center;gap:12px;padding:16px 18px;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(12px);z-index:81;border-bottom:1px solid var(--line)}
 .back{width:42px;height:42px;border-radius:14px;border:1px solid var(--line);background:var(--bg2);display:grid;place-items:center;font-size:20px;cursor:pointer;color:var(--fg)}
 .vhead h2{margin:0;font-size:24px}.empty{color:var(--mut);text-align:center;padding:40px 0}
+
+.hero{position:relative;isolation:isolate}
+.herobg{position:absolute;left:50%;transform:translateX(-50%);top:0;width:100vw;height:100%;z-index:-1;background-size:cover;background-position:center top;opacity:var(--hbo,.35);filter:blur(var(--hbb,0px));
+-webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 45%,transparent 95%);mask-image:linear-gradient(to bottom,#000 0%,#000 45%,transparent 95%);animation:hz 18s ease-in-out infinite alternate}
+@keyframes hz{from{transform:translateX(-50%) scale(1)}to{transform:translateX(-50%) scale(1.06)}}
 </style></head><body>
 <canvas id="bgfx"></canvas><div class="loader" id="ld">&gt; loading AQDAS…</div>
 <nav class="nav"><a class="brand" href="#home"><span class="dot">A</span><span id="nBrand">AQDAS HACKER</span></a>
 <div class="links"><a href="#about">About</a><a href="#store">Store</a><a href="#links">Links</a><a href="#contact">Contact</a></div>
 <a class="pill" id="nWa" target="_blank" rel="noopener">WhatsApp</a></nav>
-<section class="hero" id="home"><div class="kick rv" id="hKick">PORTFOLIO / STORE</div>
+<section class="hero" id="home"><div class="herobg" id="hbg"></div><div class="kick rv" id="hKick">PORTFOLIO / STORE</div>
 <div class="big rv" id="hName">Hussain</div><div class="tag rv typed" id="hTag"></div><div class="heroBtns rv" id="hBtns"></div></section>
 <section id="about"><div class="profile"><div class="photo rv" id="pPhoto"><span class="badge"><i></i><span id="pStatus"></span></span></div>
 <div class="about rv"><div class="kick">ABOUT ME</div><h2 id="aTitle"></h2><p id="aText"></p><div class="quote" id="aQuote"></div><div class="chips" id="aSkills"></div></div></div></section>
@@ -82,6 +87,7 @@ const safe=u=>/^(https?:|mailto:|tel:)/i.test(u||'')?u:'#';
 let d={};try{d=await loadSite()}catch(e){console.error(e)}
 document.documentElement.style.setProperty('--a',d.accent||'#00ff88');if(d.theme==='light')document.body.classList.add('light');
 const wa=n=>'https://wa.me/'+String(n||'').replace(/\D/g,'');
+{const hb=d.heroBg||d.photo;if(hb&&d.heroBgOn!==false){$('hbg').style.backgroundImage='url("'+String(hb).replace(/["\\)]/g,'')+'")';$('hbg').style.setProperty('--hbo',(d.heroBgOpacity??35)/100);$('hbg').style.setProperty('--hbb',(d.heroBgBlur??0)+'px')}}
 document.title=(d.brand||'AQDAS HACKER')+' — '+(d.name||'');
 $('nBrand').textContent=d.brand||'AQDAS HACKER';$('nWa').href=wa(d.whatsapp);
 $('hKick').textContent=(d.brand||'')+' / PORTFOLIO & STORE';
