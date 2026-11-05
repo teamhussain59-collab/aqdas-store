@@ -125,7 +125,7 @@ const first=()=>{go();['pointerdown','touchstart','keydown','scroll'].forEach(e=
 mb.onclick=e=>{e.stopPropagation();muted=!muted;localStorage.setItem('aqm',muted?'1':'0');if(muted){au.pause()}else{au.play().catch(()=>{})}ui()};
 document.addEventListener('visibilitychange',()=>{if(document.hidden)au.pause();else go()})}}
 
-{const M=d.mascot||{};const img=(M.img||'').trim()||'/mascot-run.png';const pimg=(M.peekImg||'').trim()||((M.img||'').trim()?img:'/mascot-peek.png');if(M.on!=='off'){
+{const M=d.mascot||{};const img=(M.img||'').trim()||'/anime-run.gif';const pimg=(M.peekImg||'').trim()||((M.img||'').trim()?img:'/anime-peek.gif');if(M.on!=='off'){
  const size=nv(M.size,120),runN=nv(M.runTimes,1),peekN=nv(M.peekTimes,1),gap=Math.max(nv(M.gap,8),2)*1000,first=Math.max(nv(M.delay,3),0)*1000,speed=Math.max(nv(M.speed,4),1)*1000;
  const mk=c=>{const e=document.createElement('div');e.className='msc '+c;e.style.width=size+'px';e.innerHTML='<img alt="" src="'+(c==='peek'?pimg:img).replace(/"/g,'')+'">';document.body.appendChild(e);return e};
  const run=()=>new Promise(r=>{const e=mk('run');const ltr=Math.random()<.5;e.style.setProperty('--mt',(25+Math.random()*45)+'%');const W=innerWidth+size;
