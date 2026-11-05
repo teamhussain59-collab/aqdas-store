@@ -27,8 +27,9 @@ textarea{min-height:90px}button{padding:11px 14px;border-radius:10px;border:0;fo
 <div class="two"><div><label>WhatsApp number (923...)</label><input data-k="whatsapp"></div><div><label>Theme</label><select data-k="theme"><option value="dark">Dark</option><option value="light">Light</option></select></div></div>
 <label>Rang (accent colour)</label><input data-k="accent" type="color" style="height:48px;padding:4px">
 </div>
-<h3>Upar wale Buttons</h3><div id="buttons"></div><button id="addB">+ Button add karo</button>
-<h3>Store Products</h3><div id="products"></div><button id="addP">+ Product add karo</button>
+<h3>Upar wale Buttons (optional)</h3><div id="buttons"></div><button id="addB">+ Button add karo</button>
+<h3>Categories (store ke chhote buttons)</h3><div id="categories"></div><button id="addC">+ Category add karo</button>
+<h3>Items (har category ki cheezein)</h3><div id="products"></div><button id="addP">+ Product add karo</button>
 <h3>Social Links</h3><div id="socials"></div><button id="addS">+ Link add karo</button>
 <button class="g save" id="sv">💾 SAVE</button></div>
 <script type="module">
@@ -41,20 +42,22 @@ $('lo').onclick=()=>signOut(auth);
 onAuthStateChanged(auth,async u=>{ if(!u){$('login').style.display='block';$('ed').style.display='none';return}
  $('login').style.display='none';$('ed').style.display='block';D=await loadSite();fill()});
 function fill(){document.querySelectorAll('[data-k]').forEach(i=>i.value=D[i.dataset.k]??'');$('skills').value=(D.skills||[]).join(', ');
- D.buttons=D.buttons||[];D.products=D.products||[];D.socials=D.socials||[];list('buttons',BF);list('products',PF);list('socials',SF)}
+ D.buttons=D.buttons||[];D.products=D.products||[];D.socials=D.socials||[];D.categories=D.categories||[];list('buttons',BF);list('categories',CF);list('products',PF);list('socials',SF)}
 const BF=[['label','Button text (emoji bhi)'],['url','Link (click pe naya tab khulega)']];
 const SF=[['label','Naam (YouTube, Instagram...)'],['url','Link']];
-const PF=[['title','Naam'],['desc','Detail'],['icon','Emoji icon'],['image','Image link (optional)'],['type','FREE / PREMIUM'],['price','Rate (jaise Rs 999)'],['btn','Button text'],['url','Link (khali = WhatsApp order)']];
-function list(k,F){const el=$(k);el.innerHTML=D[k].map((it,i)=>`<div class="item">${F.map(([f,l])=>f==='type'?`<label>${l}</label><select data-l="${k}" data-i="${i}" data-f="${f}"><option ${it[f]!=='PREMIUM'?'selected':''}>FREE</option><option ${it[f]==='PREMIUM'?'selected':''}>PREMIUM</option></select>`:`<label>${l}</label><input data-l="${k}" data-i="${i}" data-f="${f}" value="${esc(it[f])}">`).join('')}
+const CF=[['name','Category naam (jaise API, APK, BOT)'],['image','Image link (optional)'],['icon','Emoji (agar image na ho)']];
+const PF=[['cat','Category'],['title','Naam'],['desc','Detail (optional)'],['image','Image link'],['icon','Emoji (agar image na ho)'],['type','FREE / PAID'],['price','Rate (jaise Rs 999)'],['btn','Button text'],['url','Link / URL (khali = WhatsApp order)']];
+function list(k,F){const el=$(k);el.innerHTML=D[k].map((it,i)=>`<div class="item">${F.map(([f,l])=>f==='type'?`<label>${l}</label><select data-l="${k}" data-i="${i}" data-f="${f}"><option value="FREE" ${it[f]!=='PREMIUM'?'selected':''}>FREE</option><option value="PREMIUM" ${it[f]==='PREMIUM'?'selected':''}>PAID</option></select>`:f==='cat'?`<label>${l}</label><select data-l="${k}" data-i="${i}" data-f="${f}"><option value="">— koi nahi —</option>${(D.categories||[]).map(c=>`<option ${c.name===it.cat?'selected':''}>${esc(c.name)}</option>`).join('')}</select>`:`<label>${l}</label><input data-l="${k}" data-i="${i}" data-f="${f}" value="${esc(it[f])}">`).join('')}
 <div class="row"><button data-m="${k}" data-i="${i}" data-d="-1">⬆️</button><button data-m="${k}" data-i="${i}" data-d="1">⬇️</button><button class="r" data-x="${k}" data-i="${i}">🗑 Delete</button></div></div>`).join('')}
 document.addEventListener('input',e=>{const t=e.target;if(t.dataset.l){D[t.dataset.l][+t.dataset.i][t.dataset.f]=t.value}else if(t.dataset.k){D[t.dataset.k]=t.value}});
-document.addEventListener('change',e=>{const t=e.target;if(t.dataset.l)D[t.dataset.l][+t.dataset.i][t.dataset.f]=t.value});
-document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;const F={buttons:BF,products:PF,socials:SF};
+document.addEventListener('change',e=>{const t=e.target;if(t.dataset.l){D[t.dataset.l][+t.dataset.i][t.dataset.f]=t.value;if(t.dataset.l==='categories')list('products',PF)}});
+document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;const F={buttons:BF,products:PF,socials:SF,categories:CF};
  if(t.dataset.m){const a=D[t.dataset.m],i=+t.dataset.i,j=i+ +t.dataset.d;if(j<0||j>=a.length)return;[a[i],a[j]]=[a[j],a[i]];list(t.dataset.m,F[t.dataset.m])}
  if(t.dataset.x){if(!confirm('Delete?'))return;D[t.dataset.x].splice(+t.dataset.i,1);list(t.dataset.x,F[t.dataset.x])}});
 $('addB').onclick=()=>{D.buttons.push({label:'New Button',url:'https://'});list('buttons',BF)};
 $('addS').onclick=()=>{D.socials.push({label:'YouTube',url:'https://'});list('socials',SF)};
-$('addP').onclick=()=>{D.products.push({title:'New Product',desc:'',icon:'⭐',image:'',type:'FREE',price:'',btn:'Open',url:''});list('products',PF)};
+$('addP').onclick=()=>{D.products.push({cat:(D.categories[0]||{}).name||'',title:'New Item',desc:'',icon:'⭐',image:'',type:'FREE',price:'',btn:'Open',url:''});list('products',PF)};
+$('addC').onclick=()=>{D.categories.push({name:'API',image:'',icon:'⚡'});list('categories',CF);list('products',PF)};
 $('sv').onclick=async()=>{D.skills=$('skills').value.split(',').map(s=>s.trim()).filter(Boolean);
  try{await saveSite(D);toast('✅ Save ho gaya! Site update ho gayi')}catch(e){toast('❌ '+e.code);console.error(e)}};
 </script></body></html>

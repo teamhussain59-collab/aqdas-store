@@ -49,6 +49,16 @@ h2{font-size:clamp(34px,6vw,64px);font-weight:300;letter-spacing:-1.5px;margin:6
 .rv{opacity:0;transform:translateY(40px);transition:1s cubic-bezier(.2,.7,.2,1)}.rv.in{opacity:1;transform:none}
 .typed::after{content:'_';animation:bl 1s infinite;color:var(--a)}@keyframes bl{50%{opacity:0}}
 .loader{position:fixed;inset:0;background:var(--bg);display:grid;place-items:center;z-index:99;transition:.6s;font-family:'JetBrains Mono';color:var(--a)}.loader.hide{opacity:0;pointer-events:none}
+
+.cats{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
+.cat{border-radius:20px;background:var(--bg2);border:1px solid var(--line);padding:18px 12px;text-align:center;cursor:pointer;transition:.25s;font-weight:800;letter-spacing:.5px}
+.cat:hover{transform:translateY(-4px);border-color:var(--a);box-shadow:0 8px 30px color-mix(in srgb,var(--a) 25%,transparent)}
+.cat .ci{width:64px;height:64px;margin:0 auto 10px;border-radius:18px;display:grid;place-items:center;font-size:30px;overflow:hidden;background:radial-gradient(circle,color-mix(in srgb,var(--a) 30%,transparent),transparent 70%)}
+.cat .ci img{width:100%;height:100%;object-fit:cover}.cat small{display:block;color:var(--mut);font-weight:400;font-size:12px;margin-top:4px}
+.view{position:fixed;inset:0;background:var(--bg);z-index:80;overflow:auto;padding:84px 0 110px;transform:translateY(100%);transition:.45s cubic-bezier(.2,.7,.2,1)}
+.view.open{transform:none}.vhead{position:fixed;top:0;left:0;right:0;display:flex;align-items:center;gap:12px;padding:16px 18px;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(12px);z-index:81;border-bottom:1px solid var(--line)}
+.back{width:42px;height:42px;border-radius:14px;border:1px solid var(--line);background:var(--bg2);display:grid;place-items:center;font-size:20px;cursor:pointer;color:var(--fg)}
+.vhead h2{margin:0;font-size:24px}.empty{color:var(--mut);text-align:center;padding:40px 0}
 </style></head><body>
 <canvas id="bgfx"></canvas><div class="loader" id="ld">&gt; loading AQDAS…</div>
 <nav class="nav"><a class="brand" href="#home"><span class="dot">A</span><span id="nBrand">AQDAS HACKER</span></a>
@@ -58,7 +68,8 @@ h2{font-size:clamp(34px,6vw,64px);font-weight:300;letter-spacing:-1.5px;margin:6
 <div class="big rv" id="hName">Hussain</div><div class="tag rv typed" id="hTag"></div><div class="heroBtns rv" id="hBtns"></div></section>
 <section id="about"><div class="profile"><div class="photo rv" id="pPhoto"><span class="badge"><i></i><span id="pStatus"></span></span></div>
 <div class="about rv"><div class="kick">ABOUT ME</div><h2 id="aTitle"></h2><p id="aText"></p><div class="quote" id="aQuote"></div><div class="chips" id="aSkills"></div></div></div></section>
-<section id="store"><div class="kick rv">STORE / TOOLS</div><h2 class="rv">Bots, Apps <b>&amp; More</b></h2><div class="grid" id="grid"></div></section>
+<section id="store"><div class="kick rv">STORE / TOOLS</div><h2 class="rv">Bots, Apps <b>&amp; More</b></h2><div class="cats" id="cats"></div><div class="grid" id="grid" style="margin-top:16px"></div></section>
+<div class="view" id="view"><div class="vhead" id="vhead"><span class="back" id="back">←</span><h2 id="vtitle"></h2></div><section style="padding-top:20px"><div class="grid" id="vgrid"></div></section></div>
 <section id="links"><div class="kick rv">LINKS</div><h2 class="rv">Follow <b>Me</b></h2><div class="heroBtns" id="soc"></div></section>
 <section class="contact" id="contact"><div class="kick rv">CONTACT</div><div class="big2 rv">Let's <b>talk</b></div><p class="tag rv" style="margin:12px auto" id="cNum"></p>
 <div class="heroBtns rv" style="justify-content:center"><a class="btn main" id="cWa" target="_blank" rel="noopener">💬 WhatsApp pe message karo</a></div></section>
@@ -81,9 +92,20 @@ $('pPhoto').insertAdjacentHTML('afterbegin',d.photo?`<img src="${esc(d.photo)}" 
 $('pStatus').textContent=(d.status||'Available')+(d.location?' • '+d.location:'');
 $('aTitle').innerHTML='Main hoon <b>'+esc(d.name||'')+'</b>';$('aText').textContent=d.about||'';
 $('aQuote').textContent=d.quote?'“'+d.quote+'”':'';$('aSkills').innerHTML=(d.skills||[]).map(s=>`<span class="chip">${esc(s)}</span>`).join('');
-$('grid').innerHTML=(d.products||[]).map(p=>{const prem=p.type==='PREMIUM';const href=p.url?safe(p.url):wa(d.whatsapp)+'?text='+encodeURIComponent('Assalam o Alaikum! Mujhe "'+p.title+'" chahiye'+(p.price?' ('+p.price+')':''));
-return `<div class="card rv"><div class="cimg">${p.image?`<img src="${esc(p.image)}" alt="">`:esc(p.icon||'⭐')}<span class="tagt ${prem?'PREMIUM':'FREE'}">${prem?'PREMIUM':'FREE'}</span></div>
-<div class="cb"><h3>${esc(p.title)}</h3><p>${esc(p.desc)}</p><div class="row"><span class="price">${prem?esc(p.price||''):'Free'}</span><a class="btn ${prem?'':'main'}" href="${esc(href)}" target="_blank" rel="noopener">${esc(p.btn||(prem?'Order on WhatsApp':'Open'))}</a></div></div></div>`}).join('');
+const card=p=>{const prem=p.type==='PREMIUM'||p.type==='PAID';const href=p.url?safe(p.url):wa(d.whatsapp)+'?text='+encodeURIComponent('Assalam o Alaikum! Mujhe "'+p.title+'" chahiye'+(p.price?' ('+p.price+')':''));
+return `<div class="card rv in"><div class="cimg">${p.image?`<img src="${esc(p.image)}" alt="" loading="lazy">`:esc(p.icon||'⭐')}<span class="tagt ${prem?'PREMIUM':'FREE'}">${prem?'PAID':'FREE'}</span></div>
+<div class="cb"><h3>${esc(p.title)}</h3><p>${esc(p.desc||'')}</p><div class="row"><span class="price">${prem?esc(p.price||''):'Free'}</span><a class="btn ${prem?'':'main'}" href="${esc(href)}" target="_blank" rel="noopener">${esc(p.btn||(prem?'Order on WhatsApp':'Open'))}</a></div></div></div>`};
+const prods=d.products||[],cats=d.categories||[];
+$('cats').innerHTML=cats.map((c,i)=>`<div class="cat rv" data-c="${i}"><div class="ci">${c.image?`<img src="${esc(c.image)}" alt="">`:esc(c.icon||'📦')}</div>${esc(c.name)}<small>${prods.filter(p=>p.cat===c.name).length} items</small></div>`).join('');
+const loose=prods.filter(p=>!p.cat||!cats.some(c=>c.name===p.cat));$('grid').innerHTML=loose.map(card).join('');
+if(!cats.length&&!prods.length)$('cats').innerHTML='<p class="empty">Jald aa raha hai…</p>';
+function openCat(i,push=true){const c=cats[i];if(!c)return;$('vtitle').textContent=c.name;const items=prods.filter(p=>p.cat===c.name);
+ $('vgrid').innerHTML=items.length?items.map(card).join(''):'<p class="empty">Is category mein abhi kuch nahi</p>';$('view').classList.add('open');$('view').scrollTop=0;document.body.style.overflow='hidden';if(push)history.pushState({c:i},'','#'+encodeURIComponent(c.name))}
+function closeCat(){$('view').classList.remove('open');document.body.style.overflow=''}
+$('cats').onclick=e=>{const t=e.target.closest('.cat');if(t)openCat(+t.dataset.c)};
+$('back').onclick=()=>{if(history.state&&history.state.c!=null)history.back();else{closeCat();history.replaceState(null,'',location.pathname)}};
+addEventListener('popstate',e=>{if(e.state&&e.state.c!=null)openCat(e.state.c,false);else closeCat()});
+{const h=decodeURIComponent(location.hash.slice(1));const k=cats.findIndex(c=>c.name===h);if(k>=0){history.replaceState({c:k},'',location.hash);openCat(k,false)}}
 $('soc').innerHTML=(d.socials||[]).map(s=>`<a class="btn rv" href="${esc(safe(s.url))}" target="_blank" rel="noopener">${esc(s.label)} ↗</a>`).join('');
 $('cNum').textContent='+'+String(d.whatsapp||'').replace(/\D/g,'');$('cWa').href=wa(d.whatsapp)+'?text='+encodeURIComponent('Assalam o Alaikum!');
 $('foot').textContent='© '+new Date().getFullYear()+' '+(d.brand||'AQDAS HACKER');
