@@ -98,7 +98,9 @@ const $=i=>document.getElementById(i);const esc=s=>String(s??'').replace(/[&<>"]
 const safe=u=>/^(https?:|mailto:|tel:)/i.test(u||'')?u:'#';
 let d={};try{d=await loadSite()}catch(e){console.error(e)}
 document.documentElement.style.setProperty('--a',d.accent||'#00ff88');if(d.theme==='light')document.body.classList.add('light');
-const wa=n=>'https://wa.me/'+String(n||'').replace(/\D/g,'');
+const wa=n=>{n=String(n||'').trim();if(/^https?:\/\//i.test(n))return n;if(/[a-z]/i.test(n))return 'https://wa.me/'+n.replace(/^@/,'').replace(/[^\w.]/g,'');return 'https://wa.me/'+n.replace(/\D/g,'')};
+const waT=(n,t)=>{const u=wa(n);return u+(u.includes('?')?'&':'?')+'text='+encodeURIComponent(t)};
+const waShow=n=>{n=String(n||'').trim();if(/^https?:/i.test(n))return 'WhatsApp';if(/[a-z]/i.test(n))return '@'+n.replace(/^@/,'');return '+'+n.replace(/\D/g,'')};
 {const hb=d.heroBg||d.photo;if(hb&&d.heroBgOn!==false){$('hbg').style.backgroundImage='url("'+String(hb).replace(/["\\)]/g,'')+'")';$('hbg').style.setProperty('--hbo',(d.heroBgOpacity??35)/100);$('hbg').style.setProperty('--hbb',(d.heroBgBlur??0)+'px')}}
 document.title=(d.brand||'AQDAS HACKER')+' — '+(d.name||'');
 $('nBrand').textContent=d.brand||'AQDAS HACKER';$('nWa').href=wa(d.whatsapp);
@@ -111,7 +113,7 @@ $('pPhoto').insertAdjacentHTML('afterbegin',d.photo?`<img src="${esc(d.photo)}" 
 $('pStatus').textContent=(d.status||'Available')+(d.location?' • '+d.location:'');
 $('aTitle').innerHTML='Main hoon <b>'+esc(d.name||'')+'</b>';$('aText').textContent=d.about||'';
 $('aQuote').textContent=d.quote?'“'+d.quote+'”':'';$('aSkills').innerHTML=(d.skills||[]).map(s=>`<span class="chip">${esc(s)}</span>`).join('');
-const card=p=>{const prem=p.type==='PREMIUM'||p.type==='PAID';const href=p.url?safe(p.url):wa(d.whatsapp)+'?text='+encodeURIComponent('Assalam o Alaikum! Mujhe "'+p.title+'" chahiye'+(p.price?' ('+p.price+')':''));
+const card=p=>{const prem=p.type==='PREMIUM'||p.type==='PAID';const href=p.url?safe(p.url):waT(d.whatsapp,'Assalam o Alaikum! Mujhe "'+p.title+'" chahiye'+(p.price?' ('+p.price+')':''));
 return `<div class="card rv in"><div class="cimg">${p.image?`<img src="${esc(p.image)}" alt="" loading="lazy">`:esc(p.icon||'⭐')}<span class="tagt ${prem?'PREMIUM':'FREE'}">${prem?'PAID':'FREE'}</span></div>
 <div class="cb"><h3>${esc(p.title)}</h3><p>${esc(p.desc||'')}</p><div class="row"><span class="price">${prem?esc(p.price||''):'Free'}</span><a class="btn ${prem?'':'main'}" href="${esc(href)}" target="_blank" rel="noopener">${esc(p.btn||(prem?'Order on WhatsApp':'Open'))}</a></div></div></div>`};
 const prods=d.products||[],cats=d.categories||[];
@@ -126,7 +128,7 @@ $('back').onclick=()=>{if(history.state&&history.state.c!=null)history.back();el
 addEventListener('popstate',e=>{if(e.state&&e.state.c!=null)openCat(e.state.c,false);else closeCat()});
 {const h=decodeURIComponent(location.hash.slice(1));const k=cats.findIndex(c=>c.name===h);if(k>=0){history.replaceState({c:k},'',location.hash);openCat(k,false)}}
 $('soc').innerHTML=(d.socials||[]).map(s=>`<a class="btn rv" href="${esc(safe(s.url))}" target="_blank" rel="noopener">${esc(s.label)} ↗</a>`).join('');
-$('cNum').textContent='+'+String(d.whatsapp||'').replace(/\D/g,'');$('cWa').href=wa(d.whatsapp)+'?text='+encodeURIComponent('Assalam o Alaikum!');
+$('cNum').textContent=waShow(d.whatsapp);$('cWa').href=waT(d.whatsapp,'Assalam o Alaikum!');
 $('foot').textContent='© '+new Date().getFullYear()+' '+(d.brand||'AQDAS HACKER');
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
 document.querySelectorAll('.rv').forEach((el,i)=>{el.style.transitionDelay=(i%4)*90+'ms';io.observe(el)});
