@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>AQDAS HACKER</title><meta name="description" content="AQDAS HACKER — bots, apps aur tech tools">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;600;800&family=Cinzel:wght@500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{--a:#00ff88;--bg:#07090a;--bg2:#0e1214;--fg:#eef3f1;--mut:#8a9792;--line:#ffffff14}
 body.light{--bg:#eef0f0;--bg2:#ffffff;--fg:#0c0f0e;--mut:#5d6663;--line:#00000014}
@@ -64,13 +64,23 @@ h2{font-size:clamp(34px,6vw,64px);font-weight:300;letter-spacing:-1.5px;margin:6
 .herobg{position:absolute;left:50%;transform:translateX(-50%);top:0;width:100vw;height:100%;z-index:-1;background-size:cover;background-position:center top;opacity:var(--hbo,.35);filter:blur(var(--hbb,0px));
 -webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 45%,transparent 95%);mask-image:linear-gradient(to bottom,#000 0%,#000 45%,transparent 95%);animation:hz 18s ease-in-out infinite alternate}
 @keyframes hz{from{transform:translateX(-50%) scale(1)}to{transform:translateX(-50%) scale(1.06)}}
+
+.brand #nBrand{font-family:Cinzel,serif;letter-spacing:4px;font-weight:700}
+.hero{justify-content:space-between!important;padding-bottom:110px;min-height:100svh}
+.roles{list-style:none;margin-top:28vh;display:flex;flex-direction:column;gap:8px}
+.roles li{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;display:flex;align-items:center;gap:10px}
+.roles li::before{content:'';width:6px;height:6px;background:var(--fg)}
+.hname{margin-top:auto;text-align:center;line-height:.8}
+.hname small{display:block;font-family:Cinzel,serif;letter-spacing:10px;font-size:clamp(14px,3vw,22px);color:var(--a);margin-bottom:6px}
+.hname .w{display:block;font-weight:300;letter-spacing:-.04em;text-transform:uppercase;white-space:nowrap;
+background:linear-gradient(180deg,var(--fg) 30%,color-mix(in srgb,var(--fg) 25%,transparent));-webkit-background-clip:text;color:transparent;filter:drop-shadow(0 6px 30px color-mix(in srgb,var(--a) 25%,transparent))}
 </style></head><body>
 <canvas id="bgfx"></canvas><div class="loader" id="ld">&gt; loading AQDAS…</div>
 <nav class="nav"><a class="brand" href="#home"><span class="dot">A</span><span id="nBrand">AQDAS HACKER</span></a>
 <div class="links"><a href="#about">About</a><a href="#store">Store</a><a href="#links">Links</a><a href="#contact">Contact</a></div>
 <a class="pill" id="nWa" target="_blank" rel="noopener">WhatsApp</a></nav>
-<section class="hero" id="home"><div class="herobg" id="hbg"></div><div class="kick rv" id="hKick">PORTFOLIO / STORE</div>
-<div class="big rv" id="hName">Hussain</div><div class="tag rv typed" id="hTag"></div><div class="heroBtns rv" id="hBtns"></div></section>
+<section class="hero" id="home"><div class="herobg" id="hbg"></div><div class="kick rv" id="hKick" style="display:none"></div><ul class="roles rv" id="roles"></ul><div class="tag rv typed" id="hTag" style="display:none"></div><div class="heroBtns rv" id="hBtns"></div>
+<div class="hname rv"><small id="hPre"></small><span class="w" id="hName">AQDAS</span></div></section>
 <section id="about"><div class="profile"><div class="photo rv" id="pPhoto"><span class="badge"><i></i><span id="pStatus"></span></span></div>
 <div class="about rv"><div class="kick">ABOUT ME</div><h2 id="aTitle"></h2><p id="aText"></p><div class="quote" id="aQuote"></div><div class="chips" id="aSkills"></div></div></div></section>
 <section id="store"><div class="kick rv">STORE / TOOLS</div><h2 class="rv">Bots, Apps <b>&amp; More</b></h2><div class="cats" id="cats"></div><div class="grid" id="grid" style="margin-top:16px"></div></section>
@@ -91,8 +101,9 @@ const wa=n=>'https://wa.me/'+String(n||'').replace(/\D/g,'');
 document.title=(d.brand||'AQDAS HACKER')+' — '+(d.name||'');
 $('nBrand').textContent=d.brand||'AQDAS HACKER';$('nWa').href=wa(d.whatsapp);
 $('hKick').textContent=(d.brand||'')+' / PORTFOLIO & STORE';
-const nm=(d.name||'Hussain').split(' ');$('hName').innerHTML=esc(nm[0])+(nm.length>1?'<br><b>'+esc(nm.slice(1).join(' '))+'</b>':'<b>.</b>');
-const tg=d.tagline||'';let ti=0;(function ty(){ $('hTag').textContent=tg.slice(0,ti++); if(ti<=tg.length) setTimeout(ty,45)})();
+const nm=(d.name||'Hussain').trim().split(/\s+/);const big=nm.length>1?nm[nm.length-1]:nm[0];$('hPre').textContent=nm.length>1?nm.slice(0,-1).join(' ').toUpperCase():'';$('hName').textContent=big;
+const fit=()=>{const el=$('hName');el.style.fontSize='100px';const w=el.scrollWidth||1;el.style.fontSize=Math.min(100*(document.querySelector('.hname').clientWidth*0.98)/w,320)+'px'};fit();addEventListener('resize',fit);document.fonts&&document.fonts.ready.then(fit);
+$('roles').innerHTML=(d.tagline||'').split(/[•|,]/).map(s=>s.trim()).filter(Boolean).map(s=>`<li>${esc(s)}</li>`).join('');
 $('hBtns').innerHTML=(d.buttons||[]).map((b,i)=>`<a class="btn ${i==0?'main':''}" href="${esc(safe(b.url))}" target="_blank" rel="noopener">${esc(b.label)}</a>`).join('');
 $('pPhoto').insertAdjacentHTML('afterbegin',d.photo?`<img src="${esc(d.photo)}" alt="">`:`<span>${esc((d.name||'H')[0])}</span>`);
 $('pStatus').textContent=(d.status||'Available')+(d.location?' • '+d.location:'');
