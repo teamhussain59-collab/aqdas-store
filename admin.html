@@ -1,0 +1,60 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Store Admin</title><meta name="robots" content="noindex">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#0a0d0c;color:#e8f2ee;font-family:system-ui,sans-serif;padding:14px 14px 90px}
+h1{font-size:20px;margin:6px 0 14px}h3{margin:22px 0 8px;color:#00ff88;font-size:15px;letter-spacing:1px;text-transform:uppercase}
+.box{background:#121816;border:1px solid #ffffff14;border-radius:16px;padding:14px;margin-bottom:12px}
+label{display:block;font-size:12px;color:#8a9792;margin:10px 0 4px}input,textarea,select{width:100%;padding:11px;border-radius:10px;border:1px solid #ffffff22;background:#0a0d0c;color:#fff;font-size:15px}
+textarea{min-height:90px}button{padding:11px 14px;border-radius:10px;border:0;font-weight:700;font-size:14px;cursor:pointer;background:#1d2522;color:#fff}
+.g{background:#00ff88;color:#001a0d}.r{background:#3a1515;color:#ff8a8a}.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.item{border:1px solid #ffffff1a;border-radius:12px;padding:10px;margin-bottom:10px;background:#0e1311}
+.save{position:fixed;left:14px;right:14px;bottom:14px;padding:16px;font-size:16px;box-shadow:0 0 30px #00ff8866}
+#msg{position:fixed;top:12px;left:50%;transform:translateX(-50%);background:#00ff88;color:#000;padding:10px 16px;border-radius:12px;font-weight:700;display:none;z-index:9}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}a{color:#00ff88}
+</style></head><body><div id="msg"></div>
+<div id="login" class="box" style="max-width:420px;margin:60px auto"><h1>🔐 Store Admin</h1><p style="color:#8a9792;font-size:13px">Apne AQDAS HACKER admin email/password se login karo.</p>
+<label>Email</label><input id="em" type="email" autocomplete="username"><label>Password</label><input id="pw" type="password" autocomplete="current-password">
+<div class="row"><button class="g" id="lb" style="width:100%">Login</button></div><p id="le" style="color:#ff8a8a"></p></div>
+<div id="ed" style="display:none;max-width:760px;margin:0 auto">
+<div class="row" style="justify-content:space-between;align-items:center"><h1>🛒 Store Admin</h1><div class="row" style="margin:0"><a href="./" target="_blank"><button>View site ↗</button></a><button id="lo">Logout</button></div></div>
+<h3>Profile</h3><div class="box">
+<div class="two"><div><label>Naam</label><input data-k="name"></div><div><label>Brand</label><input data-k="brand"></div></div>
+<label>Tagline (upar type hota hai)</label><input data-k="tagline">
+<label>About (apne bare mein)</label><textarea data-k="about"></textarea>
+<label>Photo link (image URL)</label><input data-k="photo" placeholder="https://...jpg">
+<div class="two"><div><label>Status</label><input data-k="status"></div><div><label>Location</label><input data-k="location"></div></div>
+<label>Quote</label><input data-k="quote">
+<label>Skills (comma se alag)</label><input id="skills">
+<div class="two"><div><label>WhatsApp number (923...)</label><input data-k="whatsapp"></div><div><label>Theme</label><select data-k="theme"><option value="dark">Dark</option><option value="light">Light</option></select></div></div>
+<label>Rang (accent colour)</label><input data-k="accent" type="color" style="height:48px;padding:4px">
+</div>
+<h3>Upar wale Buttons</h3><div id="buttons"></div><button id="addB">+ Button add karo</button>
+<h3>Store Products</h3><div id="products"></div><button id="addP">+ Product add karo</button>
+<h3>Social Links</h3><div id="socials"></div><button id="addS">+ Link add karo</button>
+<button class="g save" id="sv">💾 SAVE</button></div>
+<script type="module">
+import {auth,loadSite,saveSite,signInWithEmailAndPassword,onAuthStateChanged,signOut} from './fb.js';
+const $=i=>document.getElementById(i);let D={};
+const toast=t=>{$('msg').textContent=t;$('msg').style.display='block';setTimeout(()=>$('msg').style.display='none',2500)};
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+$('lb').onclick=async()=>{try{await signInWithEmailAndPassword(auth,$('em').value.trim(),$('pw').value)}catch(e){$('le').textContent='Login nahi hua: '+e.code}};
+$('lo').onclick=()=>signOut(auth);
+onAuthStateChanged(auth,async u=>{ if(!u){$('login').style.display='block';$('ed').style.display='none';return}
+ $('login').style.display='none';$('ed').style.display='block';D=await loadSite();fill()});
+function fill(){document.querySelectorAll('[data-k]').forEach(i=>i.value=D[i.dataset.k]??'');$('skills').value=(D.skills||[]).join(', ');
+ D.buttons=D.buttons||[];D.products=D.products||[];D.socials=D.socials||[];list('buttons',BF);list('products',PF);list('socials',SF)}
+const BF=[['label','Button text (emoji bhi)'],['url','Link (click pe naya tab khulega)']];
+const SF=[['label','Naam (YouTube, Instagram...)'],['url','Link']];
+const PF=[['title','Naam'],['desc','Detail'],['icon','Emoji icon'],['image','Image link (optional)'],['type','FREE / PREMIUM'],['price','Rate (jaise Rs 999)'],['btn','Button text'],['url','Link (khali = WhatsApp order)']];
+function list(k,F){const el=$(k);el.innerHTML=D[k].map((it,i)=>`<div class="item">${F.map(([f,l])=>f==='type'?`<label>${l}</label><select data-l="${k}" data-i="${i}" data-f="${f}"><option ${it[f]!=='PREMIUM'?'selected':''}>FREE</option><option ${it[f]==='PREMIUM'?'selected':''}>PREMIUM</option></select>`:`<label>${l}</label><input data-l="${k}" data-i="${i}" data-f="${f}" value="${esc(it[f])}">`).join('')}
+<div class="row"><button data-m="${k}" data-i="${i}" data-d="-1">⬆️</button><button data-m="${k}" data-i="${i}" data-d="1">⬇️</button><button class="r" data-x="${k}" data-i="${i}">🗑 Delete</button></div></div>`).join('')}
+document.addEventListener('input',e=>{const t=e.target;if(t.dataset.l){D[t.dataset.l][+t.dataset.i][t.dataset.f]=t.value}else if(t.dataset.k){D[t.dataset.k]=t.value}});
+document.addEventListener('change',e=>{const t=e.target;if(t.dataset.l)D[t.dataset.l][+t.dataset.i][t.dataset.f]=t.value});
+document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;const F={buttons:BF,products:PF,socials:SF};
+ if(t.dataset.m){const a=D[t.dataset.m],i=+t.dataset.i,j=i+ +t.dataset.d;if(j<0||j>=a.length)return;[a[i],a[j]]=[a[j],a[i]];list(t.dataset.m,F[t.dataset.m])}
+ if(t.dataset.x){if(!confirm('Delete?'))return;D[t.dataset.x].splice(+t.dataset.i,1);list(t.dataset.x,F[t.dataset.x])}});
+$('addB').onclick=()=>{D.buttons.push({label:'New Button',url:'https://'});list('buttons',BF)};
+$('addS').onclick=()=>{D.socials.push({label:'YouTube',url:'https://'});list('socials',SF)};
+$('addP').onclick=()=>{D.products.push({title:'New Product',desc:'',icon:'⭐',image:'',type:'FREE',price:'',btn:'Open',url:''});list('products',PF)};
+$('sv').onclick=async()=>{D.skills=$('skills').value.split(',').map(s=>s.trim()).filter(Boolean);
+ try{await saveSite(D);toast('✅ Save ho gaya! Site update ho gayi')}catch(e){toast('❌ '+e.code);console.error(e)}};
+</script></body></html>

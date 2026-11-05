@@ -1,0 +1,97 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>AQDAS HACKER</title><meta name="description" content="AQDAS HACKER — bots, apps aur tech tools">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--a:#00ff88;--bg:#07090a;--bg2:#0e1214;--fg:#eef3f1;--mut:#8a9792;--line:#ffffff14}
+body.light{--bg:#eef0f0;--bg2:#ffffff;--fg:#0c0f0e;--mut:#5d6663;--line:#00000014}
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg);font-family:Inter,system-ui,sans-serif;overflow-x:hidden;padding-bottom:96px}
+a{color:inherit;text-decoration:none}
+#bgfx{position:fixed;inset:0;z-index:-1;opacity:.55}
+.nav{position:fixed;top:14px;left:50%;transform:translateX(-50%);width:min(94%,1100px);display:flex;justify-content:space-between;align-items:center;padding:10px 14px 10px 16px;border-radius:40px;background:color-mix(in srgb,var(--bg2) 75%,transparent);backdrop-filter:blur(14px);border:1px solid var(--line);z-index:50}
+.brand{display:flex;gap:10px;align-items:center;font-weight:800;letter-spacing:.5px}.dot{width:30px;height:30px;border-radius:50%;background:var(--a);color:#000;display:grid;place-items:center;font-family:'JetBrains Mono';font-weight:700;font-size:14px;box-shadow:0 0 18px var(--a)}
+.nav .links{display:flex;gap:22px;font-size:14px;color:var(--mut)}.nav .links a:hover{color:var(--fg)}
+.pill{padding:9px 16px;border-radius:30px;background:var(--a);color:#001a0d;font-weight:700;font-size:13px}
+@media(max-width:720px){.nav .links{display:none}}
+section{width:min(92%,1100px);margin:0 auto;padding:90px 0 20px}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding-top:120px}
+.kick{font-family:'JetBrains Mono';color:var(--a);font-size:13px;letter-spacing:3px;text-transform:uppercase}
+.big{font-size:clamp(64px,17vw,190px);font-weight:200;line-height:.9;letter-spacing:-4px;margin:14px 0}
+.big b{font-weight:800;background:linear-gradient(90deg,var(--fg),var(--a));-webkit-background-clip:text;color:transparent}
+.tag{color:var(--mut);font-size:clamp(15px,2.5vw,20px);max-width:620px}
+.heroBtns{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 20px;border-radius:14px;border:1px solid var(--line);background:var(--bg2);font-weight:600;font-size:14px;transition:.25s}
+.btn:hover{transform:translateY(-3px);border-color:var(--a);box-shadow:0 8px 30px color-mix(in srgb,var(--a) 25%,transparent)}
+.btn.main{background:var(--a);color:#001a0d;border:none}
+.profile{display:grid;grid-template-columns:1fr 1.2fr;gap:40px;align-items:center}
+@media(max-width:820px){.profile{grid-template-columns:1fr}}
+.photo{aspect-ratio:4/5;border-radius:28px;overflow:hidden;background:linear-gradient(160deg,color-mix(in srgb,var(--a) 35%,var(--bg2)),var(--bg2));display:grid;place-items:center;font-size:110px;font-weight:800;color:#0008;position:relative;border:1px solid var(--line)}
+.photo img{width:100%;height:100%;object-fit:cover}
+.badge{position:absolute;left:14px;bottom:14px;padding:8px 14px;border-radius:20px;background:#000a;color:#fff;font-size:12px;backdrop-filter:blur(6px)}
+.badge i{display:inline-block;width:8px;height:8px;border-radius:50%;background:#2bff7a;margin-right:6px;box-shadow:0 0 10px #2bff7a}
+h2{font-size:clamp(34px,6vw,64px);font-weight:300;letter-spacing:-1.5px;margin:6px 0 18px}h2 b{font-weight:800}
+.about p{color:var(--mut);font-size:17px;line-height:1.7;white-space:pre-line}
+.quote{margin-top:18px;padding-left:14px;border-left:3px solid var(--a);font-style:italic}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}.chip{padding:8px 14px;border-radius:20px;border:1px solid var(--line);font-size:13px;color:var(--mut)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.card{border-radius:22px;background:var(--bg2);border:1px solid var(--line);overflow:hidden;display:flex;flex-direction:column;transition:.3s}
+.card:hover{transform:translateY(-6px);border-color:color-mix(in srgb,var(--a) 60%,transparent)}
+.cimg{height:150px;display:grid;place-items:center;font-size:62px;background:radial-gradient(circle at 50% 40%,color-mix(in srgb,var(--a) 30%,transparent),transparent 70%);position:relative}
+.cimg img{width:100%;height:100%;object-fit:cover}
+.tagt{position:absolute;top:12px;right:12px;font-size:11px;font-weight:800;letter-spacing:1px;padding:5px 10px;border-radius:10px}
+.FREE{background:#16c95f;color:#00170a}.PREMIUM{background:linear-gradient(90deg,#ffd34d,#ff9a00);color:#1a0f00}
+.cb{padding:16px;display:flex;flex-direction:column;gap:6px;flex:1}.cb h3{font-size:18px}.cb p{color:var(--mut);font-size:13px;flex:1}
+.row{display:flex;justify-content:space-between;align-items:center;margin-top:10px}.price{font-weight:800;color:var(--a);font-size:18px}
+.contact{text-align:center;padding-bottom:40px}.contact .big2{font-size:clamp(40px,9vw,96px);font-weight:200;letter-spacing:-2px}
+.foot{color:var(--mut);font-size:12px;text-align:center;padding:20px}
+.bnav{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:4px;align-items:center;padding:8px;border-radius:30px;background:color-mix(in srgb,var(--bg2) 80%,transparent);backdrop-filter:blur(14px);border:1px solid var(--line);z-index:50}
+.bnav a{width:48px;height:44px;display:grid;place-items:center;border-radius:22px;font-size:19px;color:var(--mut)}.bnav a.c{width:54px;height:54px;background:var(--a);color:#001a0d;font-family:'JetBrains Mono';font-weight:700;font-size:16px;margin:0 4px;box-shadow:0 0 22px color-mix(in srgb,var(--a) 60%,transparent)}
+.rv{opacity:0;transform:translateY(40px);transition:1s cubic-bezier(.2,.7,.2,1)}.rv.in{opacity:1;transform:none}
+.typed::after{content:'_';animation:bl 1s infinite;color:var(--a)}@keyframes bl{50%{opacity:0}}
+.loader{position:fixed;inset:0;background:var(--bg);display:grid;place-items:center;z-index:99;transition:.6s;font-family:'JetBrains Mono';color:var(--a)}.loader.hide{opacity:0;pointer-events:none}
+</style></head><body>
+<canvas id="bgfx"></canvas><div class="loader" id="ld">&gt; loading AQDAS…</div>
+<nav class="nav"><a class="brand" href="#home"><span class="dot">A</span><span id="nBrand">AQDAS HACKER</span></a>
+<div class="links"><a href="#about">About</a><a href="#store">Store</a><a href="#links">Links</a><a href="#contact">Contact</a></div>
+<a class="pill" id="nWa" target="_blank" rel="noopener">WhatsApp</a></nav>
+<section class="hero" id="home"><div class="kick rv" id="hKick">PORTFOLIO / STORE</div>
+<div class="big rv" id="hName">Hussain</div><div class="tag rv typed" id="hTag"></div><div class="heroBtns rv" id="hBtns"></div></section>
+<section id="about"><div class="profile"><div class="photo rv" id="pPhoto"><span class="badge"><i></i><span id="pStatus"></span></span></div>
+<div class="about rv"><div class="kick">ABOUT ME</div><h2 id="aTitle"></h2><p id="aText"></p><div class="quote" id="aQuote"></div><div class="chips" id="aSkills"></div></div></div></section>
+<section id="store"><div class="kick rv">STORE / TOOLS</div><h2 class="rv">Bots, Apps <b>&amp; More</b></h2><div class="grid" id="grid"></div></section>
+<section id="links"><div class="kick rv">LINKS</div><h2 class="rv">Follow <b>Me</b></h2><div class="heroBtns" id="soc"></div></section>
+<section class="contact" id="contact"><div class="kick rv">CONTACT</div><div class="big2 rv">Let's <b>talk</b></div><p class="tag rv" style="margin:12px auto" id="cNum"></p>
+<div class="heroBtns rv" style="justify-content:center"><a class="btn main" id="cWa" target="_blank" rel="noopener">💬 WhatsApp pe message karo</a></div></section>
+<div class="foot" id="foot"></div>
+<div class="bnav"><a href="#home">⌂</a><a href="#store">🛒</a><a class="c" href="#about">&lt;/&gt;</a><a href="#links">🔗</a><a href="#contact">✆</a></div>
+<script type="module">
+import {loadSite} from './fb.js';
+const $=i=>document.getElementById(i);const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const safe=u=>/^(https?:|mailto:|tel:)/i.test(u||'')?u:'#';
+let d={};try{d=await loadSite()}catch(e){console.error(e)}
+document.documentElement.style.setProperty('--a',d.accent||'#00ff88');if(d.theme==='light')document.body.classList.add('light');
+const wa=n=>'https://wa.me/'+String(n||'').replace(/\D/g,'');
+document.title=(d.brand||'AQDAS HACKER')+' — '+(d.name||'');
+$('nBrand').textContent=d.brand||'AQDAS HACKER';$('nWa').href=wa(d.whatsapp);
+$('hKick').textContent=(d.brand||'')+' / PORTFOLIO & STORE';
+const nm=(d.name||'Hussain').split(' ');$('hName').innerHTML=esc(nm[0])+(nm.length>1?'<br><b>'+esc(nm.slice(1).join(' '))+'</b>':'<b>.</b>');
+const tg=d.tagline||'';let ti=0;(function ty(){ $('hTag').textContent=tg.slice(0,ti++); if(ti<=tg.length) setTimeout(ty,45)})();
+$('hBtns').innerHTML=(d.buttons||[]).map((b,i)=>`<a class="btn ${i==0?'main':''}" href="${esc(safe(b.url))}" target="_blank" rel="noopener">${esc(b.label)}</a>`).join('');
+$('pPhoto').insertAdjacentHTML('afterbegin',d.photo?`<img src="${esc(d.photo)}" alt="">`:`<span>${esc((d.name||'H')[0])}</span>`);
+$('pStatus').textContent=(d.status||'Available')+(d.location?' • '+d.location:'');
+$('aTitle').innerHTML='Main hoon <b>'+esc(d.name||'')+'</b>';$('aText').textContent=d.about||'';
+$('aQuote').textContent=d.quote?'“'+d.quote+'”':'';$('aSkills').innerHTML=(d.skills||[]).map(s=>`<span class="chip">${esc(s)}</span>`).join('');
+$('grid').innerHTML=(d.products||[]).map(p=>{const prem=p.type==='PREMIUM';const href=p.url?safe(p.url):wa(d.whatsapp)+'?text='+encodeURIComponent('Assalam o Alaikum! Mujhe "'+p.title+'" chahiye'+(p.price?' ('+p.price+')':''));
+return `<div class="card rv"><div class="cimg">${p.image?`<img src="${esc(p.image)}" alt="">`:esc(p.icon||'⭐')}<span class="tagt ${prem?'PREMIUM':'FREE'}">${prem?'PREMIUM':'FREE'}</span></div>
+<div class="cb"><h3>${esc(p.title)}</h3><p>${esc(p.desc)}</p><div class="row"><span class="price">${prem?esc(p.price||''):'Free'}</span><a class="btn ${prem?'':'main'}" href="${esc(href)}" target="_blank" rel="noopener">${esc(p.btn||(prem?'Order on WhatsApp':'Open'))}</a></div></div></div>`}).join('');
+$('soc').innerHTML=(d.socials||[]).map(s=>`<a class="btn rv" href="${esc(safe(s.url))}" target="_blank" rel="noopener">${esc(s.label)} ↗</a>`).join('');
+$('cNum').textContent='+'+String(d.whatsapp||'').replace(/\D/g,'');$('cWa').href=wa(d.whatsapp)+'?text='+encodeURIComponent('Assalam o Alaikum!');
+$('foot').textContent='© '+new Date().getFullYear()+' '+(d.brand||'AQDAS HACKER');
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.rv').forEach((el,i)=>{el.style.transitionDelay=(i%4)*90+'ms';io.observe(el)});
+setTimeout(()=>$('ld').classList.add('hide'),300);
+// matrix-ish particles
+const c=$('bgfx'),x=c.getContext('2d');let W,H,P=[];function rs(){W=c.width=innerWidth;H=c.height=innerHeight;P=Array.from({length:Math.min(70,W/14)},()=>({x:Math.random()*W,y:Math.random()*H,v:.2+Math.random()*.6,s:Math.random()*2+0.5}))}rs();addEventListener('resize',rs);
+const ac=getComputedStyle(document.documentElement).getPropertyValue('--a').trim();
+(function f(){x.clearRect(0,0,W,H);x.fillStyle=ac;P.forEach(p=>{p.y+=p.v;if(p.y>H){p.y=-5;p.x=Math.random()*W}x.globalAlpha=.35;x.fillRect(p.x,p.y,p.s,p.s*6)});requestAnimationFrame(f)})();
+</script></body></html>
