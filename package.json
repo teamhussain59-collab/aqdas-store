@@ -1,0 +1,9 @@
+{
+  "name": "aqdas-store",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "qrcode": "^1.5.4",
+    "adhan": "^4.4.3"
+  }
+}
