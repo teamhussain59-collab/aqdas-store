@@ -1,0 +1,27 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MR AQDAS — API Key Balance</title><meta name="robots" content="noindex">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+<style>*{box-sizing:border-box}body{margin:0;font-family:Poppins,sans-serif;background:#0b0b0f;color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background-image:radial-gradient(circle at 20% 10%,rgba(255,0,0,.25),transparent 40%),radial-gradient(circle at 80% 90%,rgba(255,0,0,.18),transparent 40%)}
+.w{width:100%;max-width:440px}h1{font-family:Cinzel,serif;letter-spacing:4px;text-align:center;font-size:26px;margin:0 0 4px}h1 b{color:#ff0000}.sub{text-align:center;opacity:.7;margin:0 0 22px;font-size:14px}
+.box{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:20px;backdrop-filter:blur(8px)}
+input{width:100%;padding:14px;border-radius:12px;border:1px solid #333;background:#15151c;color:#fff;font-size:16px;font-family:monospace;letter-spacing:1px}button{width:100%;margin-top:12px;padding:14px;border:0;border-radius:12px;background:#ff0000;color:#fff;font-weight:800;font-size:16px;cursor:pointer}
+.res{margin-top:18px;display:none}.big{text-align:center;font-size:54px;font-weight:800;line-height:1;margin:10px 0 2px}.big small{display:block;font-size:13px;font-weight:400;opacity:.7;margin-top:6px}
+.bar{height:10px;background:#222;border-radius:9px;overflow:hidden;margin:14px 0}.bar i{display:block;height:100%;background:linear-gradient(90deg,#ff0000,#ff7a00)}
+.row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:14px}.row span{opacity:.7}.st{text-align:center;font-weight:800;padding:8px;border-radius:10px;margin-bottom:6px}
+.err{color:#ff6b6b;text-align:center;margin-top:14px;display:none}a{color:#ff4d4d}.ft{text-align:center;margin-top:16px;font-size:13px}</style></head><body><div class="w">
+<h1>MR <b>AQDAS</b></h1><p class="sub">🔑 API Key Balance Check</p>
+<div class="box"><input id="k" placeholder="AQDAS-XXXX-XXXX-XXXX" autocomplete="off"><button id="go">Balance dekho</button>
+<div class="err" id="er"></div>
+<div class="res" id="rs"><div class="st" id="st"></div><div class="big" id="bl">0<small>requests baaki</small></div><div class="bar"><i id="br"></i></div>
+<div class="row"><span>👤 User</span><b id="us"></b></div><div class="row"><span>📊 Use ho chuki</span><b id="ud"></b></div><div class="row"><span>📅 Expiry</span><b id="ex"></b></div><div class="row"><span>⏳ Din baaki</span><b id="dl"></b></div><div class="row" style="border:0"><span>⚡ APIs</span><b id="ap"></b></div></div></div>
+<p class="ft"><a href="/apis">⚡ APIs</a> · <a href="/">🏠 Store</a></p></div>
+<script>
+const $=i=>document.getElementById(i);
+async function chk(){const k=$('k').value.trim();$('er').style.display='none';$('rs').style.display='none';if(!k)return;$('go').textContent='Check ho raha hai...';
+try{const r=await fetch('/api/balance?key='+encodeURIComponent(k));const j=await r.json();if(!j.status)throw new Error(j.error||'Key nahi mili');const i=j.key;
+const C={active:['✅ ACTIVE','#1a7f37'],expired:['⌛ EXPIRE HO GAYI','#8a5a00'],disabled:['⛔ BAND HAI','#7a0000'],'no balance':['🪫 BALANCE KHATAM','#7a0000']}[i.status]||[i.status,'#333'];
+$('st').textContent=C[0];$('st').style.background=C[1];$('bl').firstChild.textContent=i.balance;$('br').style.width=(i.limit?Math.round(i.balance/i.limit*100):0)+'%';
+$('us').textContent=i.user||'-';$('ud').textContent=i.used+' / '+i.limit;$('ex').textContent=i.expires?new Date(i.expires).toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'-';$('dl').textContent=i.days_left+' din';$('ap').textContent=i.apis==='all'?'Sab PAID APIs':i.apis;
+$('rs').style.display='block';localStorage.setItem('aqk',k);history.replaceState(null,'','?key='+encodeURIComponent(k))}catch(e){$('er').textContent='❌ '+e.message;$('er').style.display='block'}$('go').textContent='Balance dekho'}
+$('go').onclick=chk;$('k').addEventListener('keydown',e=>{if(e.key==='Enter')chk()});
+const p=new URLSearchParams(location.search).get('key')||localStorage.getItem('aqk');if(p){$('k').value=p;chk()}
+</script></body></html>
