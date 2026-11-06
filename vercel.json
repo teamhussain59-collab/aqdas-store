@@ -1,5 +1,12 @@
 {
  "cleanUrls": true,
+ "redirects": [
+  {
+   "source": "/:path((?!api/).*)",
+   "destination": "https://mraqdastool.web.app/:path",
+   "permanent": true
+  }
+ ],
  "headers": [
   {
    "source": "/admin",
