@@ -11,6 +11,9 @@ body.light{--bg:#eef0f0;--bg2:#ffffff;--fg:#0c0f0e;--mut:#5d6663;--line:#0000001
 body{background:var(--bg);color:var(--fg);font-family:Inter,system-ui,sans-serif;overflow-x:hidden;padding-bottom:96px}
 a{color:inherit;text-decoration:none}
 #bgfx{position:fixed;inset:0;z-index:-1;opacity:.55}
+#siteBg{position:fixed;inset:-12px;z-index:-2;background:url(images/store-bg.jpg) center/cover no-repeat;filter:blur(3px);pointer-events:none}
+#siteBg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,9,10,.62),rgba(7,9,10,.84))}
+body.light #siteBg::after{background:linear-gradient(180deg,rgba(238,240,240,.8),rgba(238,240,240,.92))}
 .nav{position:fixed;top:14px;left:50%;transform:translateX(-50%);width:min(94%,1100px);display:flex;justify-content:space-between;align-items:center;padding:10px 14px 10px 16px;border-radius:40px;background:color-mix(in srgb,var(--bg2) 75%,transparent);backdrop-filter:blur(14px);border:1px solid var(--line);z-index:50}
 .brand{display:flex;gap:10px;align-items:center;font-weight:800;letter-spacing:.5px}.dot{width:30px;height:30px;border-radius:50%;background:var(--a);color:#000;display:grid;place-items:center;font-family:'JetBrains Mono';font-weight:700;font-size:14px;box-shadow:0 0 18px var(--a)}
 .nav .links{display:flex;gap:22px;font-size:14px;color:var(--mut)}.nav .links a:hover{color:var(--fg)}
@@ -140,6 +143,7 @@ background:linear-gradient(180deg,var(--fg) 30%,color-mix(in srgb,var(--fg) 25%,
 @media(max-width:420px){.vfx{height:136px}.vfx .vbars{height:48px}}
 @media (prefers-reduced-motion:reduce){.vfx::before,.vfx::after,.vfx .vbars i,.vfx .vcur,.vfx .vrip{animation:none!important}.vfx .vcur{left:44%;top:50%}.vfx .vrip{display:none}}
 </style></head><body>
+<div id="siteBg" aria-hidden="true"></div>
 <canvas id="bgfx"></canvas><div class="loader" id="ld">&gt; loading AQDAS…</div>
 <nav class="nav"><a class="brand" href="#home"><span class="dot">A</span><span id="nBrand">AQDAS HACKER</span></a>
 <div class="links"><a href="#about">About</a><a href="#store">Store</a><a href="/apk" target="_blank" rel="noopener">📱 APK</a><a href="/web" target="_blank" rel="noopener">🌐 WEB</a><a href="#links">Links</a><a href="#contact">Contact</a></div>
