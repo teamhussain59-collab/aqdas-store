@@ -92,11 +92,14 @@ background:linear-gradient(180deg,var(--fg) 30%,color-mix(in srgb,var(--fg) 25%,
 .msc.peek.up img{animation:mwob 1.2s ease-in-out infinite alternate}
 @keyframes mwob{from{transform:rotate(-6deg)}to{transform:rotate(6deg)}}
 .vblock{padding-top:50px;padding-bottom:10px}
-.vbox{position:relative;width:min(100%,340px);aspect-ratio:9/16;margin:18px auto 0;border-radius:24px;overflow:hidden;background:#000;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+.vwrap{display:grid;grid-template-columns:240px minmax(0,1fr);gap:28px;align-items:center;max-width:860px;margin:18px auto 0;padding:0 16px}
+.vbox{position:relative;width:100%;max-width:240px;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:#000;box-shadow:0 12px 40px rgba(0,0,0,.35)}
 .vbox video,.vbox img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border:0}
-.vbox iframe{position:absolute;top:0;left:50%;transform:translateX(-50%);height:100%;width:316%;border:0;pointer-events:none}
-.vtitle{text-align:center;margin:8px 0 0}
-.vdesc{text-align:center;max-width:560px;margin:16px auto 0;white-space:pre-line;opacity:.85;line-height:1.5}
+.vbox iframe{position:absolute;inset:0;width:100%;height:100%;border:0;pointer-events:none}
+.vtext{text-align:left;min-width:0}
+.vtitle{text-align:left;margin:0}
+.vdesc{text-align:left;max-width:520px;margin:14px 0 0;white-space:pre-line;opacity:.85;line-height:1.5}
+@media (max-width:700px){.vwrap{grid-template-columns:1fr;justify-items:center;gap:18px}.vbox{width:200px;max-width:100%}.vtext{text-align:center}.vtitle{text-align:center}.vdesc{text-align:center;margin-top:10px}}
 </style></head><body>
 <canvas id="bgfx"></canvas><div class="loader" id="ld">&gt; loading AQDAS…</div>
 <nav class="nav"><a class="brand" href="#home"><span class="dot">A</span><span id="nBrand">AQDAS HACKER</span></a>
@@ -106,7 +109,7 @@ background:linear-gradient(180deg,var(--fg) 30%,color-mix(in srgb,var(--fg) 25%,
 <div class="hname rv"><small id="hPre"></small><span class="w" id="hName">AQDAS</span></div></section>
 <section id="about"><div class="profile"><div class="photo rv" id="pPhoto"><span class="badge"><i></i><span id="pStatus"></span></span></div>
 <div class="about rv"><div class="kick">ABOUT ME</div><h2 id="aTitle"></h2><p id="aText"></p><div class="quote" id="aQuote"></div><div class="chips" id="aSkills"></div></div></div></section>
-<section id="vid" class="vblock" style="display:none"><div class="kick rv">VIDEO</div><h2 class="rv vtitle" id="vTitle" style="display:none"></h2><div class="vbox rv" id="vBox" style="display:none"></div><p class="rv vdesc" id="vDesc" style="display:none"></p></section>
+<section id="vid" class="vblock" style="display:none"><div class="kick rv">VIDEO</div><div class="vwrap"><div class="vbox rv" id="vBox" style="display:none"></div><div class="vtext"><h2 class="rv vtitle" id="vTitle" style="display:none"></h2><p class="rv vdesc" id="vDesc" style="display:none"></p></div></div></section>
 <section id="store"><div class="kick rv">STORE / TOOLS</div><h2 class="rv">Bots, Apps <b>&amp; More</b></h2><div class="appBtns rv"><a href="/apk" target="_blank" rel="noopener">📱 APK Apps</a><a href="/web" target="_blank" rel="noopener">🌐 Web Tools</a></div><div class="cats" id="cats"></div><div class="grid" id="grid" style="margin-top:16px"></div></section>
 <div class="view" id="view"><div class="vhead" id="vhead"><span class="back" id="back">←</span><h2 id="vtitle"></h2></div><section style="padding-top:20px"><div class="grid" id="vgrid"></div></section></div>
 <section id="links"><div class="kick rv">LINKS</div><h2 class="rv">Follow <b>Me</b></h2><div class="heroBtns" id="soc"></div></section>
