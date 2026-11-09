@@ -149,17 +149,17 @@ background:linear-gradient(180deg,var(--fg) 30%,color-mix(in srgb,var(--fg) 25%,
 .vfx.slow::after{animation-duration:8s}
 .vfx.slow .vbars i{animation-duration:4.5s}
 .vfx.slow .vcur,.vfx.slow .vrip{animation-duration:17.5s}
-</style><link rel="stylesheet" href="account.css"></head><body>
+</style></head><body>
 <div id="siteBg" aria-hidden="true"></div>
 <canvas id="bgfx"></canvas><div class="loader" id="ld">&gt; loading AQDAS…</div>
 <nav class="nav"><a class="brand" href="#home"><span class="dot">A</span><span id="nBrand">AQDAS HACKER</span></a>
 <div class="links"><a href="#about">About</a><a href="#store">Store</a><a href="/apk" target="_blank" rel="noopener">📱 APK</a><a href="/web" target="_blank" rel="noopener">🌐 WEB</a><a href="#links">Links</a><a href="#contact">Contact</a></div>
-<button class="authPill" id="navAuth" type="button">Sign up / Log in</button><a class="pill" id="nWa" target="_blank" rel="noopener">WhatsApp</a></nav>
+<a class="pill" id="nWa" target="_blank" rel="noopener">WhatsApp</a></nav>
 <section class="hero" id="home"><div class="herobg" id="hbg"></div><div class="kick rv" id="hKick" style="display:none"></div><ul class="roles rv" id="roles"></ul><div class="tag rv typed" id="hTag" style="display:none"></div><div class="gfx rv" id="gfx" style="display:none"><div class="kick">STORE STATS</div><h3 class="gh">Ek nazar <b>mein</b></h3><div class="gwrap"><div class="donut"><svg viewBox="0 0 120 120" id="gDonut" aria-hidden="true"></svg><div class="gc"><b id="gTotal">0</b><small>items</small></div></div><ul class="gbars" id="gBars"></ul></div></div>
 <div class="vfx" id="vfx" aria-hidden="true"><div class="vlab">MR AQDAS<small>VFX · LIVE</small></div>
 <div class="vbars"><i style="--h:42%;--d:0s"></i><i style="--h:78%;--d:.2s"></i><i style="--h:55%;--d:.4s"></i><i style="--h:92%;--d:.1s"></i><i style="--h:63%;--d:.5s"></i><i style="--h:84%;--d:.3s"></i><i style="--h:48%;--d:.6s"></i></div>
 <div class="vrip"></div><div class="vcur"><svg viewBox="0 0 24 24"><path d="M3 2l7.5 19 2.6-7.9L21 10.5z" fill="currentColor" stroke="#000" stroke-width="1.2" stroke-linejoin="round"/></svg></div></div>
-<div class="hname rv"><small id="hPre"></small><span class="w" id="hName">AQDAS</span></div><div class="heroBtns rv" id="hBtns"></div><div class="heroBtns rv heroAuthRow"><button class="btn main" id="heroAuth" type="button">Sign up / Log in</button></div></section>
+<div class="hname rv"><small id="hPre"></small><span class="w" id="hName">AQDAS</span></div><div class="heroBtns rv" id="hBtns"></div></section>
 <section id="about"><div class="profile"><div class="photo rv" id="pPhoto"><span class="badge"><i></i><span id="pStatus"></span></span></div>
 <div class="about rv"><div class="kick">ABOUT ME</div><h2 id="aTitle"></h2><p id="aText"></p><div class="quote" id="aQuote"></div><div class="chips" id="aSkills"></div></div></div></section>
 <section id="vid" class="vblock" style="display:none"><div class="kick rv">VIDEO</div><div class="vwrap"><div class="vbox rv" id="vBox" style="display:none"></div><div class="vtext"><h2 class="rv vtitle" id="vTitle" style="display:none"></h2><p class="rv vdesc" id="vDesc" style="display:none"></p></div></div></section>
@@ -262,5 +262,4 @@ const c=$('bgfx'),x=c.getContext('2d');let W,H,P=[];function rs(){W=c.width=inne
 const ac=getComputedStyle(document.documentElement).getPropertyValue('--a').trim();
 (function f(){x.clearRect(0,0,W,H);x.fillStyle=ac;P.forEach(p=>{p.y+=p.v;if(p.y>H){p.y=-5;p.x=Math.random()*W}x.globalAlpha=.35;x.fillRect(p.x,p.y,p.s,p.s*6)});requestAnimationFrame(f)})();
 </script><audio id="bgm" loop preload="auto" playsinline></audio><button id="mBtn" aria-label="Music">🔇</button>
-<script src="account.js" defer></script>
 </body></html>
