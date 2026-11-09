@@ -91,6 +91,10 @@ background:linear-gradient(180deg,var(--fg) 30%,color-mix(in srgb,var(--fg) 25%,
 .msc.peek.up{transform:translateY(18%)}
 .msc.peek.up img{animation:mwob 1.2s ease-in-out infinite alternate}
 @keyframes mwob{from{transform:rotate(-6deg)}to{transform:rotate(6deg)}}
+.vblock{padding-top:50px;padding-bottom:10px}
+.vbox{position:relative;width:min(100%,340px);aspect-ratio:9/16;margin:18px auto 0;border-radius:24px;overflow:hidden;background:#000;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+.vbox video,.vbox img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border:0}
+.vbox iframe{position:absolute;top:0;left:50%;transform:translateX(-50%);height:100%;width:316%;border:0;pointer-events:none}
 </style></head><body>
 <canvas id="bgfx"></canvas><div class="loader" id="ld">&gt; loading AQDAS…</div>
 <nav class="nav"><a class="brand" href="#home"><span class="dot">A</span><span id="nBrand">AQDAS HACKER</span></a>
@@ -100,6 +104,7 @@ background:linear-gradient(180deg,var(--fg) 30%,color-mix(in srgb,var(--fg) 25%,
 <div class="hname rv"><small id="hPre"></small><span class="w" id="hName">AQDAS</span></div></section>
 <section id="about"><div class="profile"><div class="photo rv" id="pPhoto"><span class="badge"><i></i><span id="pStatus"></span></span></div>
 <div class="about rv"><div class="kick">ABOUT ME</div><h2 id="aTitle"></h2><p id="aText"></p><div class="quote" id="aQuote"></div><div class="chips" id="aSkills"></div></div></div></section>
+<section id="vid" class="vblock" style="display:none"><div class="kick rv">VIDEO</div><div class="vbox rv" id="vBox"></div></section>
 <section id="store"><div class="kick rv">STORE / TOOLS</div><h2 class="rv">Bots, Apps <b>&amp; More</b></h2><div class="appBtns rv"><a href="/apk" target="_blank" rel="noopener">📱 APK Apps</a><a href="/web" target="_blank" rel="noopener">🌐 Web Tools</a></div><div class="cats" id="cats"></div><div class="grid" id="grid" style="margin-top:16px"></div></section>
 <div class="view" id="view"><div class="vhead" id="vhead"><span class="back" id="back">←</span><h2 id="vtitle"></h2></div><section style="padding-top:20px"><div class="grid" id="vgrid"></div></section></div>
 <section id="links"><div class="kick rv">LINKS</div><h2 class="rv">Follow <b>Me</b></h2><div class="heroBtns" id="soc"></div></section>
@@ -142,6 +147,12 @@ const nm=(d.name||'Hussain').trim().split(/\s+/);const big=nm.length>1?nm[nm.len
 const fit=()=>{const el=$('hName');el.style.fontSize='100px';const w=el.scrollWidth||1;el.style.fontSize=Math.min(100*(document.querySelector('.hname').clientWidth*0.98)/w,320)+'px'};fit();addEventListener('resize',fit);document.fonts&&document.fonts.ready.then(fit);
 $('roles').innerHTML=(d.tagline||'').split(/[•|,]/).map(s=>s.trim()).filter(Boolean).map(s=>`<li>${esc(s)}</li>`).join('');
 $('hBtns').innerHTML=(d.buttons||[]).map((b,i)=>`<a class="btn ${i==0?'main':''}" href="${esc(safe(b.url))}" target="_blank" rel="noopener">${esc(b.label)}</a>`).join('');
+{const ytId=s=>{const t=String(s||'').trim();const m=t.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/))([\w-]{11})/i)||t.match(/^([\w-]{11})$/);return m?m[1]:''};
+ const vu=String(d.videoUrl||'').trim(),vy=ytId(d.videoYt||'')||(/youtu/i.test(vu)?ytId(vu):''),von=d.videoOn!=='off'&&d.videoOn!==false;
+ if(von){let h='';
+  if(vu&&!/youtu/i.test(vu)&&(/^https?:\/\//i.test(vu)||vu[0]==='/')) h=/\.(mp4|webm|mov|m4v)(\?|#|$)/i.test(vu)?`<video src="${esc(vu)}" autoplay muted loop playsinline preload="auto"></video>`:`<img alt="" src="${esc(vu)}">`;
+  else if(vy) h=`<iframe src="https://www.youtube-nocookie.com/embed/${vy}?autoplay=1&mute=1&loop=1&playlist=${vy}&controls=0&playsinline=1&modestbranding=1&rel=0" allow="autoplay; encrypted-media; picture-in-picture" title="Video"></iframe>`;
+  if(h){$('vBox').innerHTML=h;$('vid').style.display='block'}}}
 $('pPhoto').insertAdjacentHTML('afterbegin',d.photo?`<img src="${esc(d.photo)}" alt="">`:`<span>${esc((d.name||'H')[0])}</span>`);
 $('pStatus').textContent=(d.status||'Available')+(d.location?' • '+d.location:'');
 $('aTitle').innerHTML='Main hoon <b>'+esc(d.name||'')+'</b>';$('aText').textContent=d.about||'';
