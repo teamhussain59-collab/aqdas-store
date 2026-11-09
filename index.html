@@ -142,6 +142,13 @@ background:linear-gradient(180deg,var(--fg) 30%,color-mix(in srgb,var(--fg) 25%,
 @keyframes vscan{from{top:-40px}to{top:100%}}
 @media(max-width:420px){.vfx{height:136px}.vfx .vbars{height:48px}}
 @media (prefers-reduced-motion:reduce){.vfx::before,.vfx::after,.vfx .vbars i,.vfx .vcur,.vfx .vrip{animation:none!important}.vfx .vcur{left:44%;top:50%}.vfx .vrip{display:none}}
+.more{grid-column:1/-1;justify-self:center;cursor:pointer;font:inherit;font-size:14px;font-weight:700;padding:12px 22px;border-radius:14px;border:1px solid var(--line);background:var(--bg2);color:var(--fg);transition:.25s}
+.more:hover{border-color:var(--a)}
+.lim>.xtra{display:none}
+.vfx.slow::before{animation-duration:22.5s}
+.vfx.slow::after{animation-duration:8s}
+.vfx.slow .vbars i{animation-duration:4.5s}
+.vfx.slow .vcur,.vfx.slow .vrip{animation-duration:17.5s}
 </style></head><body>
 <div id="siteBg" aria-hidden="true"></div>
 <canvas id="bgfx"></canvas><div class="loader" id="ld">&gt; loading AQDAS…</div>
@@ -149,7 +156,7 @@ background:linear-gradient(180deg,var(--fg) 30%,color-mix(in srgb,var(--fg) 25%,
 <div class="links"><a href="#about">About</a><a href="#store">Store</a><a href="/apk" target="_blank" rel="noopener">📱 APK</a><a href="/web" target="_blank" rel="noopener">🌐 WEB</a><a href="#links">Links</a><a href="#contact">Contact</a></div>
 <a class="pill" id="nWa" target="_blank" rel="noopener">WhatsApp</a></nav>
 <section class="hero" id="home"><div class="herobg" id="hbg"></div><div class="kick rv" id="hKick" style="display:none"></div><ul class="roles rv" id="roles"></ul><div class="tag rv typed" id="hTag" style="display:none"></div><div class="gfx rv" id="gfx" style="display:none"><div class="kick">STORE STATS</div><h3 class="gh">Ek nazar <b>mein</b></h3><div class="gwrap"><div class="donut"><svg viewBox="0 0 120 120" id="gDonut" aria-hidden="true"></svg><div class="gc"><b id="gTotal">0</b><small>items</small></div></div><ul class="gbars" id="gBars"></ul></div></div>
-<div class="vfx" aria-hidden="true"><div class="vlab">MR AQDAS<small>VFX · LIVE</small></div>
+<div class="vfx" id="vfx" aria-hidden="true"><div class="vlab">MR AQDAS<small>VFX · LIVE</small></div>
 <div class="vbars"><i style="--h:42%;--d:0s"></i><i style="--h:78%;--d:.2s"></i><i style="--h:55%;--d:.4s"></i><i style="--h:92%;--d:.1s"></i><i style="--h:63%;--d:.5s"></i><i style="--h:84%;--d:.3s"></i><i style="--h:48%;--d:.6s"></i></div>
 <div class="vrip"></div><div class="vcur"><svg viewBox="0 0 24 24"><path d="M3 2l7.5 19 2.6-7.9L21 10.5z" fill="currentColor" stroke="#000" stroke-width="1.2" stroke-linejoin="round"/></svg></div></div>
 <div class="hname rv"><small id="hPre"></small><span class="w" id="hName">AQDAS</span></div><div class="heroBtns rv" id="hBtns"></div></section>
@@ -197,7 +204,7 @@ $('hKick').textContent=(d.brand||'')+' / PORTFOLIO & STORE';
 const nm=(d.name||'Hussain').trim().split(/\s+/);const big=nm.length>1?nm[nm.length-1]:nm[0];$('hPre').textContent=nm.length>1?nm.slice(0,-1).join(' ').toUpperCase():'';$('hName').textContent=big;
 const fit=()=>{const el=$('hName');el.style.fontSize='100px';const w=el.scrollWidth||1;el.style.fontSize=Math.min(100*(document.querySelector('.hname').clientWidth*0.98)/w,320)+'px'};fit();addEventListener('resize',fit);document.fonts&&document.fonts.ready.then(fit);
 $('roles').innerHTML=(d.tagline||'').split(/[•|,]/).map(s=>s.trim()).filter(Boolean).map(s=>`<li>${esc(s)}</li>`).join('');
-$('hBtns').innerHTML=(d.buttons||[]).map((b,i)=>`<a class="btn ${i==0?'main':''}" href="${esc(safe(b.url))}" target="_blank" rel="noopener">${esc(b.label)}</a>`).join('');
+const hbs=d.buttons||[];$('hBtns').innerHTML=hbs.map((b,i)=>`<a class="btn ${i==0?'main':''}${i>=4?' xtra':''}" href="${esc(safe(b.url))}" target="_blank" rel="noopener">${esc(b.label)}</a>`).join('')+(hbs.length>4?'<button class="more" type="button" data-more="hBtns">Read more</button>':'');$('hBtns').classList.toggle('lim',hbs.length>4);
 {const ytId=s=>{const t=String(s||'').trim();const m=t.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/))([\w-]{11})/i)||t.match(/^([\w-]{11})$/);return m?m[1]:''};
  const okU=u=>/^https?:\/\//i.test(u)||u[0]==='/';
  const vu=String(d.videoUrl||'').trim(),vy=ytId(d.videoYt||'')||(/youtu/i.test(vu)?ytId(vu):''),von=d.videoOn!=='off'&&d.videoOn!==false;
@@ -223,7 +230,8 @@ const apiOn=(Array.isArray(d.apis)?d.apis:[{"icon": "🤖", "name": "AI Chat", "
 apiOn.forEach(a=>{if(!cats.some(c=>c.name===acat(a)))cats.push({name:acat(a),icon:'⚡'})});
 const apiCard=a=>`<div class="card rv in"><div class="cb"><h3>${esc(a.icon||'⚡')} ${esc(a.name)} ${a.paid==='paid'?'<span class="abadge" style="background:#111;color:#ffd400">🔑 PAID</span>':'<span class="abadge">FREE</span>'}</h3>${a.desc?`<p>${esc(a.desc)}</p>`:''}${a.paid==='paid'?`${a.price?`<p style="font-size:18px;font-weight:800;color:var(--a);margin:6px 0">💰 ${esc(a.price)}</p>`:''}<p style="font-size:12px">🔑 Key chahiye: link ke aakhir mein <b>&key=YOUR-KEY</b> · <a href="/balance">Balance check</a></p>`:''}<code class="acode">${esc(a.url)}</code><div class="arow"><a class="btn main" href="${esc(safe(a.url))}" target="_blank" rel="noopener">▶ Try</a><button class="btn acp" data-u="${esc(a.url)}">📋 Copy</button>${a.paid==='paid'?`<a class="btn main" href="${esc(waT(d.whatsapp,'Assalam o Alaikum, mujhe '+a.name+' API ki key chahiye'+(a.price?' ('+a.price+')':'')))}" target="_blank" rel="noopener">🛒 Key kharido</a>`:''}</div></div></div>`;
 const inCat=c=>prods.filter(p=>p.cat===c.name).length+apiOn.filter(a=>acat(a)===c.name).length;
-$('cats').innerHTML=cats.map((c,i)=>`<div class="cat rv" data-c="${i}"><div class="ci">${c.image?`<img src="${esc(c.image)}" alt="">`:esc(c.icon||'📦')}</div>${esc(c.name)}<small>${inCat(c)} items</small></div>`).join('');
+$('cats').innerHTML=cats.map((c,i)=>`<div class="cat rv${i>=4?' xtra':''}" data-c="${i}"><div class="ci">${c.image?`<img src="${esc(c.image)}" alt="">`:esc(c.icon||'📦')}</div>${esc(c.name)}<small>${inCat(c)} items</small></div>`).join('')+(cats.length>4?'<button class="more" type="button" data-more="cats">Read more</button>':'');$('cats').classList.toggle('lim',cats.length>4);
+{const storeN=cats.length+prods.filter(p=>!p.cat||!cats.some(c=>c.name===p.cat)).length;$('vfx').classList.toggle('slow',storeN>2)}
 document.addEventListener('click',e=>{const b=e.target.closest('.acp');if(!b)return;navigator.clipboard.writeText(b.dataset.u).then(()=>{b.textContent='✅ Copied';setTimeout(()=>b.textContent='📋 Copy',1500)})});
 const loose=prods.filter(p=>!p.cat||!cats.some(c=>c.name===p.cat));$('grid').innerHTML=loose.map(card).join('');
 if(!cats.length&&!prods.length&&!apiOn.length)$('cats').innerHTML='<p class="empty">Jald aa raha hai…</p>';
@@ -231,6 +239,7 @@ function openCat(i,push=true){const c=cats[i];if(!c)return;$('vtitle').textConte
  $('vgrid').innerHTML=(items.length||ap.length)?items.map(card).join('')+ap.map(apiCard).join(''):'<p class="empty">Is category mein abhi kuch nahi</p>';$('view').classList.add('open');$('view').scrollTop=0;document.body.style.overflow='hidden';if(push)history.pushState({c:i},'','#'+encodeURIComponent(c.name))}
 function closeCat(){$('view').classList.remove('open');document.body.style.overflow=''}
 $('cats').onclick=e=>{const t=e.target.closest('.cat');if(t)openCat(+t.dataset.c)};
+document.addEventListener('click',e=>{const m=e.target.closest('.more[data-more]');if(!m)return;const box=$(m.dataset.more);const collapsed=box.classList.toggle('lim');m.textContent=collapsed?'Read more':'Show less'});
 $('back').onclick=()=>{if(history.state&&history.state.c!=null)history.back();else{closeCat();history.replaceState(null,'',location.pathname)}};
 addEventListener('popstate',e=>{if(e.state&&e.state.c!=null)openCat(e.state.c,false);else closeCat()});
 {const h=decodeURIComponent(location.hash.slice(1));const k=cats.findIndex(c=>c.name===h);if(k>=0){history.replaceState({c:k},'',location.hash);openCat(k,false)}}
