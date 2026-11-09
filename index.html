@@ -106,6 +106,17 @@ background:linear-gradient(180deg,var(--fg) 30%,color-mix(in srgb,var(--fg) 25%,
 .vtitle{text-align:left;margin:0}
 .vdesc{text-align:left;max-width:520px;margin:14px 0 0;white-space:pre-line;opacity:.85;line-height:1.5}
 @media (max-width:700px){.vwrap{grid-template-columns:1fr;justify-items:center;gap:18px}.vbox{width:200px;max-width:100%}.vtext{text-align:center}.vtitle{text-align:center}.vdesc{text-align:center;margin-top:10px}}
+.vlist{padding:40px 16px 10px}.vlist .grid{display:grid;width:100%;max-width:960px;margin:18px auto 0;padding:0;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px}
+.vl{text-decoration:none;color:inherit;min-width:0;border-radius:18px}
+.vl:focus-visible{outline:3px solid var(--a);outline-offset:3px}
+.vl .vth{position:relative;display:block;aspect-ratio:16/9;background:#000;overflow:hidden}
+.vl .vth.nil{background:linear-gradient(135deg,#2a0000,#000)}
+.vl .vth img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+.vl .vth::after{content:"";position:absolute;left:50%;top:50%;width:46px;height:46px;transform:translate(-50%,-50%);border-radius:50%;background:var(--a);box-shadow:0 0 22px color-mix(in srgb,var(--a) 70%,transparent);z-index:1}
+.vl .vth::before{content:"";position:absolute;left:calc(50% + 3px);top:50%;transform:translateY(-50%);border-left:13px solid #001a0d;border-top:9px solid transparent;border-bottom:9px solid transparent;z-index:2}
+.vl .vt{display:block;padding:10px 12px 12px;font-weight:700;font-size:14px;line-height:1.3;overflow-wrap:anywhere}
+@media (min-width:700px){.vlist .grid{grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}}
+@media (max-width:420px){.vlist .grid{gap:10px}.vl .vt{font-size:13px;padding:8px 10px 10px}}
 .gfx{width:min(100%,520px);margin:26px auto 24px;padding:16px 18px;border-radius:22px;border:1px solid var(--line);background:color-mix(in srgb,var(--bg2) 82%,transparent);backdrop-filter:blur(10px);box-shadow:0 10px 36px rgba(0,0,0,.25)}
 .gfx .kick{font-size:11px}
 .gh{margin:6px 0 14px;font-size:clamp(20px,5vw,28px);font-weight:300;letter-spacing:-.02em}.gh b{font-weight:800;color:var(--a)}
@@ -163,6 +174,7 @@ background:linear-gradient(180deg,var(--fg) 30%,color-mix(in srgb,var(--fg) 25%,
 <section id="about"><div class="profile"><div class="photo rv" id="pPhoto"><span class="badge"><i></i><span id="pStatus"></span></span></div>
 <div class="about rv"><div class="kick">ABOUT ME</div><h2 id="aTitle"></h2><p id="aText"></p><div class="quote" id="aQuote"></div><div class="chips" id="aSkills"></div></div></div></section>
 <section id="vid" class="vblock" style="display:none"><div class="kick rv">VIDEO</div><div class="vwrap"><div class="vbox rv" id="vBox" style="display:none"></div><div class="vtext"><h2 class="rv vtitle" id="vTitle" style="display:none"></h2><p class="rv vdesc" id="vDesc" style="display:none"></p></div></div></section>
+<section id="vlist" class="vlist" style="display:none"><div class="kick rv">VIDEOS</div><div class="grid" id="vlGrid"></div></section>
 <section id="store"><div class="kick rv">STORE / TOOLS</div><h2 class="rv">Bots, Apps <b>&amp; More</b></h2><div class="appBtns rv"><a href="/apk" target="_blank" rel="noopener">📱 APK Apps</a><a href="/web" target="_blank" rel="noopener">🌐 Web Tools</a></div><div class="cats" id="cats"></div><div class="grid" id="grid" style="margin-top:16px"></div></section>
 <div class="view" id="view"><div class="vhead" id="vhead"><span class="back" id="back">←</span><h2 id="vtitle"></h2></div><section style="padding-top:20px"><div class="grid" id="vgrid"></div></section></div>
 <section id="links"><div class="kick rv">LINKS</div><h2 class="rv">Follow <b>Me</b></h2><div class="heroBtns" id="soc"></div></section>
@@ -218,6 +230,13 @@ const hbs=d.buttons||[];$('hBtns').innerHTML=hbs.map((b,i)=>`<a class="btn ${i==
    $('vTitle').textContent=vt;$('vTitle').style.display=vt?'block':'none';
    $('vDesc').textContent=vd;$('vDesc').style.display=vd?'block':'none';
    $('vid').style.display='block'}}}
+{const ytId=s=>{const m=String(s||'').trim().match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/))([\w-]{11})/i);return m?m[1]:''};
+ const okU=u=>/^https?:\/\//i.test(u)||u[0]==='/';
+ const ytU=s=>{s=String(s||'').trim();return /^(youtu\.be|(www\.|m\.)?youtube\.com)\//i.test(s)?'https://'+s:s};
+ const vls=(Array.isArray(d.videos)?d.videos:[]).map(v=>({t:String((v&&v.title)||'').trim(),y:ytU(v&&v.yt),th:String((v&&v.thumb)||'').trim()})).filter(v=>okU(v.y));
+ if(vls.length){$('vlGrid').innerHTML=vls.map(v=>{const id=ytId(v.y);const img=v.th&&okU(v.th)?v.th:(id?'https://i.ytimg.com/vi/'+id+'/hqdefault.jpg':'');
+  return `<a class="card vl" href="${esc(safe(v.y))}" target="_blank" rel="noopener" aria-label="${esc(v.t||'Video')}"><span class="vth${img?'':' nil'}">${img?`<img alt="" loading="lazy" src="${esc(img)}">`:''}</span><span class="vt">${esc(v.t||'Video')}</span></a>`}).join('');
+  $('vlist').style.display='block'}}
 $('pPhoto').insertAdjacentHTML('afterbegin',d.photo?`<img src="${esc(d.photo)}" alt="">`:`<span>${esc((d.name||'H')[0])}</span>`);
 $('pStatus').textContent=(d.status||'Available')+(d.location?' • '+d.location:'');
 $('aTitle').innerHTML='Main hoon <b>'+esc(d.name||'')+'</b>';$('aText').textContent=d.about||'';
