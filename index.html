@@ -96,6 +96,8 @@ background:linear-gradient(180deg,var(--fg) 30%,color-mix(in srgb,var(--fg) 25%,
 .vbox{position:relative;width:100%;max-width:240px;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:#000;box-shadow:0 12px 40px rgba(0,0,0,.35)}
 .vbox video,.vbox img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border:0}
 .vbox iframe{position:absolute;inset:0;width:100%;height:100%;border:0;pointer-events:none}
+.vbox .vhit{position:absolute;inset:0;z-index:2;display:block;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.vbox .vhit:focus-visible{outline:3px solid #fff;outline-offset:-3px}
 .vtext{text-align:left;min-width:0}
 .vtitle{text-align:left;margin:0}
 .vdesc{text-align:left;max-width:520px;margin:14px 0 0;white-space:pre-line;opacity:.85;line-height:1.5}
@@ -160,7 +162,8 @@ $('hBtns').innerHTML=(d.buttons||[]).map((b,i)=>`<a class="btn ${i==0?'main':''}
   if(vu&&!/youtu/i.test(vu)&&okU(vu)) h=/\.(mp4|webm|mov|m4v)(\?|#|$)/i.test(vu)?`<video src="${esc(vu)}"${vp&&okU(vp)?` poster="${esc(vp)}"`:''} autoplay muted loop playsinline preload="auto"></video>`:`<img alt="" src="${esc(vp&&okU(vp)?vp:vu)}">`;
   else if(vy) h=`<iframe src="https://www.youtube-nocookie.com/embed/${vy}?autoplay=1&mute=1&loop=1&playlist=${vy}&controls=0&playsinline=1&modestbranding=1&rel=0" allow="autoplay; encrypted-media; picture-in-picture" title="Video"></iframe>`;
   else if(vp&&okU(vp)) h=`<img alt="" src="${esc(vp)}">`;
-  if(h||vt||vd){$('vBox').innerHTML=h;$('vBox').style.display=h?'block':'none';
+  const vlink=vy?'https://www.youtube.com/watch?v='+vy:((vu&&okU(vu)&&!/youtu/i.test(vu)&&/\.(mp4|webm|mov|m4v)(\?|#|$)/i.test(vu))?vu:'');
+  if(h||vt||vd){$('vBox').innerHTML=h+(vlink&&h?`<a class="vhit" href="${esc(vlink)}" target="_blank" rel="noopener" aria-label="Open video"></a>`:'');$('vBox').style.display=h?'block':'none';
    $('vTitle').textContent=vt;$('vTitle').style.display=vt?'block':'none';
    $('vDesc').textContent=vd;$('vDesc').style.display=vd?'block':'none';
    $('vid').style.display='block'}}}
